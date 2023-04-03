@@ -1,0 +1,20 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/ann/src/main/java/com/twitter/ann/faiss/swig/ArrayInvertedLists.java)
+
+This file contains the implementation of the `ArrayInvertedLists` class, which is a subclass of the `InvertedLists` class. The purpose of this class is to provide an implementation of inverted lists that are stored in arrays. Inverted lists are used in similarity search algorithms to store the ids of vectors that belong to each cluster or cell of a quantizer. 
+
+The `ArrayInvertedLists` class provides methods to set and get the codes and ids of the inverted lists, as well as to add and update entries in the lists. The `setCodes` method sets the codes of the inverted lists, which are byte vectors that represent the vectors in the list. The `setIds` method sets the ids of the inverted lists, which are long vectors that represent the ids of the vectors in the list. The `getCodes` and `getIds` methods return the codes and ids of the inverted lists, respectively. 
+
+The `list_size` method returns the number of vectors in a given list. The `get_codes` method returns a pointer to the codes of a given list. The `get_ids` method returns a `LongVector` object that contains the ids of the vectors in a given list. 
+
+The `add_entries` method adds entries to a given list. It takes as input the list number, the number of entries to add, a `LongVector` object containing the ids of the vectors to add, and a pointer to the codes of the vectors to add. The method returns the offset of the first added entry. The `update_entries` method updates entries in a given list. It takes as input the list number, the offset of the first entry to update, the number of entries to update, a `LongVector` object containing the ids of the vectors to update, and a pointer to the new codes of the vectors to update. The `resize` method resizes a given list to a new size. It takes as input the list number and the new size of the list. 
+
+Overall, the `ArrayInvertedLists` class provides an implementation of inverted lists that are stored in arrays, which can be used in similarity search algorithms. The class provides methods to set and get the codes and ids of the inverted lists, as well as to add and update entries in the lists.
+## Questions: 
+ 1. What is the purpose of this code and what does it do?
+   - This code defines a Java class called `ArrayInvertedLists` that extends another class called `InvertedLists`. It contains methods for setting and getting codes and IDs, as well as adding and updating entries in a list.
+   
+2. What external dependencies does this code have?
+   - This code depends on SWIG (Simplified Wrapper and Interface Generator) version 4.0.2, which is used to generate the code automatically. It also depends on a native library called `swigfaissJNI` that provides the implementation for some of the methods.
+
+3. What is the expected input and output of the methods in this class?
+   - The `setCodes` method takes a `ByteVectorVector` object as input and does not return anything. The `getCodes` method returns a `ByteVectorVector` object. The `setIds` method takes a `SWIGTYPE_p_std__vectorT_std__vectorT_int64_t_t_t` object as input and does not return anything. The `getIds` method returns a `SWIGTYPE_p_std__vectorT_std__vectorT_int64_t_t_t` object. The `list_size` method takes a `long` value as input and returns a `long` value. The `get_codes` method takes a `long` value as input and returns a `SWIGTYPE_p_unsigned_char` object. The `get_ids` method takes a `long` value as input and returns a `LongVector` object. The `add_entries` method takes several inputs including a `LongVector` object and a `SWIGTYPE_p_unsigned_char` object, and returns a `long` value. The `update_entries` method takes several inputs including a `LongVector` object and a `SWIGTYPE_p_unsigned_char` object, and does not return anything. The `resize` method takes two `long` values as input and does not return anything.

@@ -1,0 +1,22 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/twml/libtwml/src/ops/discretizer.cpp)
+
+The code provided contains C++ code for the implementation of three TensorFlow operations: MDL, PercentileDiscretizer, and PercentileDiscretizerBinIndices. These operations are used to discretize a tensor containing continuous features. 
+
+The MDL operation takes in five inputs: keys, vals, bin_ids, bin_vals, and feature_offsets. The keys tensor contains feature ids, vals tensor contains values at corresponding feature ids, bin_ids tensor contains the discretized feature id for a given bin, bin_vals tensor contains the bin boundaries for value at a given feature id, and feature_offsets tensor specifies the starting location of bins for a given feature id. The expected sizes of keys and vals are [N], where N is the number of sparse features in the current batch. The expected sizes of bin_ids and bin_vals are [sum_{n=1}^{n=num_classes} num_bins(n)], where [0, num_classes) represents the range each feature id can take, and num_bins(n) is the number of bins for a given feature id. The expected types for keys and bin_ids are int64, and vals and bin_vals are float or double. 
+
+The PercentileDiscretizer and PercentileDiscretizerBinIndices operations have the same inputs and expected sizes and types as the MDL operation. The difference between these two operations is that PercentileDiscretizerBinIndices returns the bin indices for each discretized value, while PercentileDiscretizer returns the discretized values. 
+
+All three operations use the ComputeDiscretizers function to perform the discretization. The ComputeDiscretizers function takes in the five inputs and an optional boolean return_bin_indices. It allocates memory for the new_keys and new_vals tensors and converts the input and output tensors from TensorFlow format to twml format. It then calls the twml::mdlInfer function to perform the discretization. If an exception is caught during the discretization, the function returns an error message. 
+
+The code also includes template classes for MDL, PercentileDiscretizer, and PercentileDiscretizerBinIndices. These classes inherit from the OpKernel class and implement the Compute function, which calls the ComputeDiscretizers function. The code also includes REGISTER functions for float and double types, which register the three operations with TensorFlow. 
+
+In summary, the code provides the implementation for three TensorFlow operations that can be used to discretize a tensor containing continuous features. The operations take in five inputs and return two outputs: the discretized feature ids and values or bin indices. The operations use the ComputeDiscretizers function to perform the discretization and are implemented as template classes that inherit from the OpKernel class.
+## Questions: 
+ 1. What is the purpose of this code and what problem does it solve?
+- This code provides implementations for three different operations: MDL, PercentileDiscretizer, and PercentileDiscretizerBinIndices. These operations discretize a tensor containing continuous features.
+
+2. What are the expected inputs and outputs of these operations?
+- The expected inputs for all three operations are: keys (a tensor containing feature ids), vals (a tensor containing values at corresponding feature ids), bin_ids (a tensor containing the discretized feature id for a given bin), bin_vals (a tensor containing the bin boundaries for value at a given feature id), and feature_offsets (specifies the starting location of bins for a given feature id). The expected outputs for all three operations are: new_keys (the discretized feature ids with same shape and size as keys) and new_vals (the discretized values with the same shape and size as vals).
+
+3. What is the difference between PercentileDiscretizer and PercentileDiscretizerBinIndices?
+- The only difference between PercentileDiscretizer and PercentileDiscretizerBinIndices is that the latter returns bin indices in addition to discretized feature ids and values. If the feature id and bin id of the discretized value is the same on multiple runs, they will always be assigned to the same output key and value, regardless of the bin_id assigned during calibration.

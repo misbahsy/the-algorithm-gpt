@@ -1,0 +1,22 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/src/java/com/twitter/search/earlybird/partition/SegmentSyncConfig.java)
+
+The `SegmentSyncConfig` class encapsulates configuration information related to reading and writing segments to the local filesystem or HDFS. It provides methods to retrieve various directory paths and file names for segments, as well as methods to determine whether certain features are enabled or not.
+
+The class takes an optional `scrubGen` parameter in its constructor, which is used to set up various metrics related to scrubbing. If `scrubGen` is present, a custom gauge is exported to report the number of days between the scrub gen date and the current date. The `getScrubGen()` method can be used to retrieve the scrub gen set for this earlybird.
+
+The `getVersionFileExtension()` method returns the file extension to be used for the current flush version. The `getMinSegmentStatusCountThreshold()` method returns the threshold for how large a segment's status count must be at load time to be considered valid. These values are obtained from the `EarlybirdConfig` and `EarlybirdProperty` classes.
+
+The `isFlushToHdfsEnabled()` method determines if this earlybird is allowed to flush segments to HDFS, while the `isSegmentLoadFromHdfsEnabled()` method determines if this earlybird is allowed to load segments from HDFS. The `isDeleteFlushedSegmentsEnabled()` method determines if this earlybird is allowed to delete flushed segments. These values are obtained from the `EarlybirdProperty` and `EarlybirdConfig` classes.
+
+The `getLocalSegmentSyncRootDir()` method returns the root of the segment directory on the local disk, while the `getHdfsSegmentSyncRootDir()` method returns the root of the segment directory on HDFS. The `getHdfsSegmentUploadRootDir()` method returns the HDFS root directory where all segments should be uploaded. The `getZooKeeperSyncFullPath()` method returns the ZooKeeper path used for segment syncing.
+
+The `getPersistentFileNames()` method returns the list of directories that should be persisted for a given segment, while the `getAllSyncFileNames()` method returns the list of all files that should be synced for a given segment. The `getLocalSyncDirName()` method returns the local sync directory for a given segment, while the `getLocalLuceneSyncDirName()` method returns the local Lucene directory for a given segment. The `getHdfsSyncDirNamePrefix()` method returns the HDFS sync directory for a given segment, while the `getHdfsUploadDirNamePrefix()` method returns the prefix of the HDFS directory where the files for a given segment should be uploaded. The `getHdfsFlushDirName()` method returns the HDFS directory where the files for a given segment should be uploaded, while the `getHdfsTempFlushDirName()` method returns a temp HDFS directory to be used for a given segment. The `getVersionedName()` method concatenates the name of a given segment with the flush version extension.
+
+Overall, the `SegmentSyncConfig` class provides a centralized location for managing configuration information related to segment syncing in the Earlybird project. It can be used to retrieve various directory paths and file names for segments, as well as to determine whether certain features are enabled or not.
+## Questions: 
+ 1. What is the purpose of this code and what problem does it solve?
+- This code encapsulates config information related to reading and writing segments to local filesystem or HDFS for the Earlybird project from Twitter, which is a search and analytics platform for Twitter data.
+2. What external dependencies does this code have?
+- This code has dependencies on several packages and classes from the Earlybird and Search projects, including com.twitter.search.common, com.twitter.search.earlybird, and com.twitter.util.
+3. What metrics are being exported and why?
+- Two metrics are being exported: "scrub_gen_{scrubGenStat}" and "scrub_gen_age_in_days". These metrics are related to the scrub generation process, which is a data cleaning step that removes sensitive information from Twitter data. The first metric exports a count of the number of times a scrub generation date has been set, while the second metric exports the number of days between the scrub generation date and the current date. These metrics are useful for monitoring the scrub generation process and ensuring that sensitive information is properly handled.

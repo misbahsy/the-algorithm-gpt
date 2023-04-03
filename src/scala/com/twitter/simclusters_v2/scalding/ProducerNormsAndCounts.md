@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/src/scala/com/twitter/simclusters_v2/scalding/ProducerNormsAndCounts.scala)
+
+The `ProducerNormsAndCounts` object contains two methods, `getNormsAndCounts` and `run`, which are used to calculate and output norms and counts for a given set of edges. The purpose of this code is to generate a dataset of norms and counts for a set of user-user edges, which can be used in downstream analysis and modeling.
+
+The `getNormsAndCounts` method takes a `TypedPipe` of `Edge` objects as input and returns a `TypedPipe` of `NormsAndCounts` objects. The input `Edge` objects represent user-user relationships, with each edge containing a source user ID, a destination user ID, a flag indicating whether the relationship is a follow edge or a favorite edge, and a weight associated with the favorite edge. The `getNormsAndCounts` method first maps each `Edge` object to a tuple of the form `((srcId, destId), (followOrNot, favWt))`, where `followOrNot` is 1 if the edge is a follow edge and 0 otherwise, and `favWt` is the weight associated with the favorite edge. It then sums the tuples by key, resulting in a `TypedPipe` of tuples of the form `((srcId, destId), (followCount, favSum))`, where `followCount` is the number of follow edges between the source and destination users, and `favSum` is the sum of the weights associated with the favorite edges between the source and destination users. The method then maps each tuple to a tuple of the form `(destId, (followCount, favSum, ...))`, where the remaining elements of the tuple are various calculations based on the follow and favorite counts and weights. Finally, the method sums the tuples by key again, resulting in a `TypedPipe` of `NormsAndCounts` objects, where each object contains the norms and counts for a single user.
+
+The `run` method takes a half-life value for the favorite score as input, along with implicit `UniqueID` and `DateRange` objects, and returns a `TypedPipe` of `NormsAndCounts` objects. The method first calls two methods from the `UserUserNormalizedGraph` object to obtain the follow and favorite edges for a given time period. It then concatenates the two `TypedPipe` objects of edges and passes them to the `getNormsAndCounts` method to obtain the norms and counts for the edges. The resulting `TypedPipe` of `NormsAndCounts` objects is returned.
+
+The `ProducerNormsAndCountsBatch` object extends the `TwitterScheduledExecutionApp` trait and contains a `scheduledJob` method that uses the `AnalyticsBatchExecution` class to run the `run` method for a given time period and write the resulting norms and counts to a specified output path. The `ProducerNormsAndCountsAdhoc` and `DumpNormsAndCountsAdhoc` objects extend the `TwitterExecutionApp` trait and contain `job` methods that can be used to run the `run` and `getNormsAndCounts` methods for a specified date range and output the results to a file or print them to the console.
+## Questions: 
+ 1. What is the purpose of this code?
+- This code calculates norms and counts for a graph of Twitter users based on their follow and favorite relationships.
+
+2. What external libraries or dependencies does this code use?
+- This code uses several libraries from the Scalding framework, as well as the Twitter Execution App and Analytics Batch libraries.
+
+3. What is the difference between the `run` method in `ProducerNormsAndCounts` and the `job` method in `ProducerNormsAndCountsAdhoc`?
+- The `run` method in `ProducerNormsAndCounts` is used for scheduled batch processing, while the `job` method in `ProducerNormsAndCountsAdhoc` is used for ad hoc processing with user-specified input and output directories.

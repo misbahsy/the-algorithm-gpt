@@ -1,0 +1,20 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/src/scala/com/twitter/graph/batch/job/tweepcred/WeightedPageRank.scala)
+
+The WeightedPageRank class is a Scalding job that performs a weighted page rank algorithm on a given graph. The algorithm starts from a given pagerank, performs one iteration, tests for convergence, and if not yet converged, clones itself and starts the next page rank job with updated pagerank as input. If converged, it starts the ExtractTweepcred job instead.
+
+The class takes in several options and optional arguments, including the working directory, whether to do weighted pagerank, the current iteration, the maximum number of iterations to run, the probability of a random jump, and the total difference before finishing early. It also takes in options for the ExtractTweepcred job, including the user mass tsv file, where to put the pagerank file, and where to put the tweepcred file.
+
+The doPageRank method performs one iteration of the pagerank algorithm. For the unweighted algorithm, it calculates the pagerankNext for each node by summing the inputPagerank of nodes that point to it and dividing by their out degree. It then calculates the deadPagerank, which is the probability of landing on a node that has no out degree, and the randomPagerank, which is the probability of a random jump plus the deadPagerank. Finally, it scales the pagerankNext to 1-ALPHA and adds it to the randomPagerank to get the output pagerank.
+
+For the weighted algorithm, it calculates the pagerankNext by summing the inputPagerank of nodes that point to it and multiplying by their weight and dividing by their total out weights. The rest of the algorithm is the same as the unweighted algorithm.
+
+The next method tests for convergence and either kicks off the next iteration or starts the ExtractTweepcred job if converged.
+
+Overall, this class is a crucial part of the larger project as it performs the page rank algorithm on the given graph, which is a fundamental algorithm in graph theory and has many applications in social network analysis, web search, and recommendation systems.
+## Questions: 
+ 1. What is the purpose of this code and what problem does it solve?
+- This code implements a weighted page rank algorithm for a given graph and tests for convergence. If convergence is not yet achieved, it clones itself and starts the next page rank job with updated pagerank as input. If converged, it starts the ExtractTweepcred job instead. The purpose of this code is to calculate the page rank of nodes in a graph and extract the most influential users on Twitter.
+2. What are the optional arguments that can be passed to this code and what do they do?
+- The optional arguments that can be passed to this code are `--weighted`, `--curiteration`, `--maxiterations`, `--jumpprob`, and `--threshold`. `--weighted` is a boolean flag that specifies whether to do weighted pagerank or not. `--curiteration` specifies the current iteration of the pagerank algorithm. `--maxiterations` specifies the maximum number of iterations to run. `--jumpprob` specifies the probability of a random jump. `--threshold` specifies the total difference before finishing early.
+3. How does the pagerank algorithm work and what is the difference between the unweighted and weighted algorithms?
+- The pagerank algorithm works by calculating the probability of walking to each node in the graph. The algorithm starts with an initial pagerank and performs one iteration at a time until convergence is achieved. The unweighted algorithm assumes that each node has an equal probability of being visited and calculates the pagerank based on the out degree of each node. The weighted algorithm takes into account the weight of each edge and calculates the pagerank based on the total weight of edges pointing to each node.

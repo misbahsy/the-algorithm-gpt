@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/follow-recommendations-service/common/src/main/scala/com/twitter/follow_recommendations/common/candidate_sources/stp/STPSecondDegreeFetcher.scala)
+
+The `STPSecondDegreeFetcher` class is responsible for fetching second-degree edges for a given user. It takes in a `target` object that has a user ID and other parameters, and a sequence of `FirstDegreeEdge` objects that represent the first-degree connections of the user. It returns a `Stitch` object that contains a sequence of `SecondDegreeEdge` objects.
+
+The `getSecondDegreeEdges` method first extracts the user ID from the `target` object and then uses the `firstDegreeEdges` to expand and find mutual follows. It does this by iterating over each first-degree edge and fetching the strong tie prediction features for the connecting user using the `strongTiePredictionFeaturesOnUserClientColumn` object. It then uses these features to find the top mutual follows and creates `IntermediateSecondDegreeEdge` objects for each of them. These intermediate edges contain the connecting user ID, the ID of the mutual follow, and the edge information of the first-degree connection between the user and the connecting user.
+
+The intermediate edges are then grouped by candidate ID (i.e., the ID of the mutual follow) and joined with the edge information of the first-degree connection to create `SecondDegreeEdge` objects. These objects contain the user ID, the candidate ID, and the edge information of the second-degree connection between the user and the candidate. The edge information includes the number of mutual follow paths, the number of low Tweepcred follow paths, and the presence of email and phone paths. It also includes a social proof field that contains the connecting user ID and the real graph weight of the intermediate edges that have mutual follow or low Tweepcred follow paths. The `scoreSecondDegreeEdge` method is used to score the second-degree edges based on the number of mutual follow paths, the number of low Tweepcred follow paths, and the presence of email and phone paths. The `MaxNumSecondDegreeEdges` and `MaxNumOfMutualFollows` constants are used to limit the number of second-degree edges and the number of mutual follows, respectively.
+
+Overall, the `STPSecondDegreeFetcher` class is an important component of the larger project that is responsible for generating follow recommendations for Twitter users. It uses first-degree connections and strong tie prediction features to find mutual follows and create second-degree connections. These connections are then scored and returned as a sequence of `SecondDegreeEdge` objects.
+## Questions: 
+ 1. What is the purpose of the `STPSecondDegreeFetcher` class?
+- The `STPSecondDegreeFetcher` class is used to fetch second-degree edges for a given user based on their first-degree connections and mutual follows.
+
+2. What is the significance of the `scoreSecondDegreeEdge` method?
+- The `scoreSecondDegreeEdge` method is used to score second-degree edges based on the number of mutual follows, low Tweepcred follows, and various path types (email, phone) between the connecting users.
+
+3. What are the inputs and outputs of the `getSecondDegreeEdges` method?
+- The `getSecondDegreeEdges` method takes in a target user and a sequence of first-degree edges, and outputs a sequence of second-degree edges. The method uses the first-degree edges to find mutual follows and group them by candidate ID, and then joins the edge information to create second-degree edges.

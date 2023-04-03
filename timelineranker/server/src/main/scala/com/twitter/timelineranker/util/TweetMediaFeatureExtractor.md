@@ -1,0 +1,16 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/timelineranker/server/src/main/scala/com/twitter/timelineranker/util/TweetMediaFeatureExtractor.scala)
+
+The `TweetMediaFeaturesExtractor` object contains a method `addMediaFeaturesFromTweet` that extracts various features from media entities in a tweet and adds them to an existing `ContentFeatures` object. The `ContentFeatures` object is a case class that contains various features of a tweet, such as its length, number of hashtags, and number of URLs. The `addMediaFeaturesFromTweet` method takes in an existing `ContentFeatures` object, a tweet, and a boolean flag that determines whether to include the media entities in the returned `ContentFeatures` object. 
+
+The method first extracts various features from the media entities in the tweet, such as the height, width, and resize method of photos and videos, the playback features of videos and GIFs, the areas of faces identified in the media entities, the color palettes in the media entities sorted by percentage, the IDs of stickers applied by the user, and the 3rd party media providers. It then adds these features to the existing `ContentFeatures` object. If the boolean flag is true, it also includes the media entities in the returned `ContentFeatures` object.
+
+The object also contains various helper methods that extract specific features from the media entities, such as `getSizeFeatures` that extracts the height, width, and resize method of photos and videos, `getPlaybackFeatures` that extracts the playback features of videos and GIFs, `getFaceMapAreas` that extracts the areas of faces identified in the media entities, `getSortedColorPalette` that extracts the color palettes in the media entities sorted by percentage, `getStickerFeatures` that extracts the IDs of stickers applied by the user, `getMediaOriginProviders` that extracts the 3rd party media providers, `getIsManaged` that determines whether the media entities are managed, `getIs360` that determines whether the media entities are 360-degree photos or videos, `getViewCount` that extracts the view count of the media entities, and `getUserDefinedProductMetadataFeatures` that extracts metadata defined by the user when uploading the media entities.
+
+Overall, this code is used to extract various features from media entities in a tweet and add them to an existing `ContentFeatures` object. These features can be used for various purposes, such as ranking tweets based on their media features or analyzing the media features of tweets over time.
+## Questions: 
+ 1. What is the purpose of this code?
+   - This code defines an object called `TweetMediaFeaturesExtractor` that contains methods to extract various features from media entities in a tweet, such as size, playback features, color palette, and metadata.
+2. What external dependencies does this code rely on?
+   - This code relies on several external dependencies, including `com.twitter.mediaservices.commons.tweetmedia.thriftscala`, `com.twitter.tweetypie.thriftscala`, and `com.twitter.mediaservices.commons.mediainformation.thriftscala`.
+3. What data structures are used in this code?
+   - This code uses several data structures, including case classes `MediaSizeFeatures`, `PlaybackFeatures`, and `UserDefinedProductMetadataFeatures`, as well as Scala collections such as `Seq`, `Map`, and `Option`.

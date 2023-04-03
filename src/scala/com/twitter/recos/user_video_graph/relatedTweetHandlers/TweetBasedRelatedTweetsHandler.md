@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/src/scala/com/twitter/recos/user_video_graph/relatedTweetHandlers/TweetBasedRelatedTweetsHandler.scala)
+
+The `TweetBasedRelatedTweetsHandler` class is an implementation of the Thrift-defined service interface for tweet-based related tweets. It takes a `TweetBasedRelatedTweetRequest` object as input and returns a `RelatedTweetResponse` object as output. The purpose of this class is to find related tweets based on a given tweet ID. 
+
+The `apply` method is the entry point for the service. It takes the input request, gets all the internal tweet IDs for the given tweet ID using the `GetAllInternalTweetIdsUtil` utility class, and then calls the `getRelatedTweets` method to get the related tweets. If there is only one internal tweet ID, it calls the `getRelatedTweets` method with that ID, otherwise it returns an empty `RelatedTweetResponse`.
+
+The `getRelatedTweets` method takes the input request and an internal tweet ID as input. It first extracts the various parameters from the request such as `maxNumSamplesPerNeighbor`, `maxResults`, `minScore`, `maxTweetAgeInHours`, `minResultDegree`, `minQueryDegree`, `minCooccurrence`, and `excludeTweetIds`. It then gets the degree of the query tweet using the `getRightNodeDegree` method of the `BipartiteGraph` object. If the query tweet degree is less than the `minQueryDegree`, it returns an empty `RelatedTweetResponse`. Otherwise, it samples the left-hand side (LHS) user IDs using the `sampleLHSUsers` method of the `SampleLHSUsersUtil` utility class, and then fetches the right-hand side (RHS) tweet IDs using the `fetchRHSTweets` method of the `FetchRHSTweetsUtil` utility class. It then calculates the `scorePreFactor` and gets the related tweet candidates using the `getRelatedTweetCandidates` method of the `GetRelatedTweetCandidatesUtil` utility class. Finally, it applies various filters such as tweet age, score, and exclusion tweet IDs, and returns the related tweets in a `RelatedTweetResponse` object.
+
+This class is used in the larger project to provide a service for finding related tweets based on a given tweet ID. It uses various utility classes such as `GetAllInternalTweetIdsUtil`, `SampleLHSUsersUtil`, `FetchRHSTweetsUtil`, `GetRelatedTweetCandidatesUtil`, and `FilterUtil` to perform the necessary computations. The `BipartiteGraph` object is used to represent the user-video graph, which is the underlying data structure for finding related tweets. The `StatsReceiver` object is used to collect various statistics such as query tweet degree, response size, etc.
+## Questions: 
+ 1. What is the purpose of this code and what problem does it solve?
+- This code is an implementation of a Thrift-defined service interface for tweet-based related tweets. It solves the problem of finding related tweets based on a query tweet and various parameters.
+
+2. What dependencies does this code have?
+- This code has dependencies on several libraries and packages, including com.twitter.finagle.stats, com.twitter.graphjet.bipartite.api, com.twitter.recos.features.tweet.thriftscala, com.twitter.recos.user_video_graph.thriftscala, com.twitter.recos.user_video_graph.util, com.twitter.servo.request, and com.twitter.util.Duration.
+
+3. What are some of the configurable parameters for finding related tweets?
+- Some of the configurable parameters for finding related tweets include the maximum number of samples per neighbor, the maximum number of results, the minimum score, the maximum tweet age in hours, the minimum result degree, the minimum query degree, and the minimum co-occurrence.

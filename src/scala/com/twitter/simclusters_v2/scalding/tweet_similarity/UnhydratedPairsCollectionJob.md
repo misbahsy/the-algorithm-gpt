@@ -1,0 +1,16 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/src/scala/com/twitter/simclusters_v2/scalding/tweet_similarity/UnhydratedPairsCollectionJob.scala)
+
+The `UnhydratedPairsCollectionJob` file is part of the Twitter Algorithm project and is responsible for collecting unhydrated training pairs for supervised tweet similarity. The purpose of this job is to compute labels from co-engaged pairs and co-impressed pairs. The job takes non-promoted tweets that are created within the given `LookbackDays` and gets co-engaged pairs from them. It then takes all tweets shown in the co-engaged pairs and gets co-impressed pairs. The co-impressed pairs are considered if both tweets appear in the co-engaged pairs. The job then computes labels from the co-engaged pairs and co-impressed pairs. A pair is true if its user has co-engaged the pair, and is false if otherwise.
+
+The `getLabelledPairs` method is the main method in this file. It takes a `dateRange`, `timeframe`, `maxSamplesPerClass`, `dalDataset`, and `outputPath` as input parameters. The `dateRange` parameter specifies the range of dates to consider for the job. The `timeframe` parameter specifies the time frame in minutes for the co-impressed pairs. The `maxSamplesPerClass` parameter specifies the maximum number of samples per class. The `dalDataset` parameter is a TimePartitionedDALDataset of LabelledTweetPairs. The `outputPath` parameter specifies the output path for the job.
+
+The `getLabelledPairs` method first reads the most recent snapshot of promoted tweets. It then gets the tweet author pairs and non-promoted tweets. It then gets the co-engaged pairs and engaged tweets. Finally, it gets the co-impressed pairs and computes the labelled tweet pairs. If `maxSamplesPerClass` is greater than 0, it gets the query tweet balanced class pairs. It then writes the labelled tweet pairs to the `dalDataset` and gets the per-query stats exec.
+
+The `UnhydratedPairsCollectionAdhocApp` and `UnhydratedPairsCollection30MinScheduledApp` and `UnhydratedPairsCollection120MinScheduledApp` objects are used to run the job. The `UnhydratedPairsCollectionAdhocApp` object is used to run the job ad-hoc. The `UnhydratedPairsCollection30MinScheduledApp` and `UnhydratedPairsCollection120MinScheduledApp` objects are used to run the job on a scheduled basis.
+## Questions: 
+ 1. What is the purpose of this code and what problem does it solve?
+- This code collects unhydrated training pairs for supervised tweet similarity by considering non-promoted tweets created within a given lookback period, getting co-engaged pairs, taking all tweets shown in the co-engaged pairs and getting co-impressed pairs, and computing labels from the co-engaged and co-impressed pairs.
+2. What external libraries or dependencies does this code use?
+- This code uses several external libraries including com.twitter.scalding, com.twitter.conversions.DurationOps, com.twitter.dal.client.dataset.TimePartitionedDALDataset, com.twitter.simclusters_v2.thriftscala, and com.twitter.wtf.scalding.jobs.common.ScheduledExecutionApp.
+3. How is the output of this code used and where is it stored?
+- The output of this code is stored in a DAL dataset and is used for supervised tweet similarity. The output is written to a specified output path and is also used to compute per-query statistics.

@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/timelineranker/server/src/main/scala/com/twitter/timelineranker/in_network_tweets/InNetworkTweetRepositoryBuilder.scala)
+
+The `InNetworkTweetRepositoryBuilder` class is responsible for building an instance of the `InNetworkTweetRepository` class, which is used to retrieve tweets from a user's network. The `InNetworkTweetRepository` class is used in the larger project to power the "In Network" tab on Twitter's web and mobile applications.
+
+The `InNetworkTweetRepositoryBuilder` class extends the `CandidatesRepositoryBuilder` class and overrides some of its methods to configure the `InNetworkTweetRepository` instance. The `clientSubId` field is set to "recycled_tweets", which is used to identify the client that is making the request. The `requestScope` field is set to `RequestScopes.InNetworkTweetSource`, which is used to identify the scope of the request. The `followGraphDataFieldsToFetch` field is set to a set of `SgsFollowGraphDataFields` values, which are used to specify the fields to fetch from the follow graph data. The `searchProcessingTimeout` field is set to 200 milliseconds, which is used to specify the timeout for search processing.
+
+The `earlybirdClient` method is used to create an instance of the `EarlybirdService.MethodPerEndpoint` class, which is used to communicate with the Earlybird service. The `earlybirdRealtimeCGClient` method is used to create an instance of the `EarlybirdService.MethodPerEndpoint` class, which is used to communicate with the Earlybird RealtimeCG service. The `searchClientForSourceTweets` field is used to create a new instance of the `SearchClient` class, which is used to search for tweets from the source user.
+
+The `apply` method is used to create an instance of the `InNetworkTweetRepository` class. The `InNetworkTweetSource` class is used to retrieve tweets from a user's network. The `InNetworkTweetSource` class is initialized with several parameters, including the `gizmoduckClient`, `searchClient`, `searchClientForSourceTweets`, `tweetyPieHighQoSClient`, `userMetadataClient`, `followGraphDataProvider`, `contentFeaturesCache`, `visibilityEnforcerFactory`, and `statsReceiver`. The `InNetworkTweetRepository` class is initialized with two instances of the `InNetworkTweetSource` class, which are used to retrieve tweets from the user's network in real-time and from the cache.
+
+Overall, the `InNetworkTweetRepositoryBuilder` class is used to configure and build an instance of the `InNetworkTweetRepository` class, which is used to retrieve tweets from a user's network. The `InNetworkTweetRepository` class is used in the larger project to power the "In Network" tab on Twitter's web and mobile applications.
+## Questions: 
+ 1. What is the purpose of this code and what does it do?
+- This code builds an InNetworkTweetRepository that retrieves tweets from a specific source and applies visibility rules to them.
+2. What are the different timeouts used in this code and why are they important?
+- There are several different timeouts used for different parts of the code, including EarlybirdTimeout and EarlybirdRequestTimeout. These timeouts are important for ensuring that requests do not take too long and cause performance issues.
+3. What is the significance of the VisibilityRuleExclusions set and how is it used in the code?
+- The VisibilityRuleExclusions set contains a list of reasons why a tweet might be excluded from visibility rules. It is used in the InNetworkTweetRepositoryBuilder to apply visibility rules to tweets from a specific source.

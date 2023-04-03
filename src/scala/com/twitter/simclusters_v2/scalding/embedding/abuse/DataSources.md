@@ -1,0 +1,20 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/src/scala/com/twitter/simclusters_v2/scalding/embedding/abuse/DataSources.scala)
+
+The `DataSources` object contains helper functions to retrieve and process data sources used in the larger project called The Algorithm from Twitter. 
+
+The `getUserInterestedInSparseMatrix` function returns a sparse matrix of user's interestedIn clusters and fav scores. It takes in a date range and returns a `SparseMatrix` object with `UserId` as rows, `ClusterId` as columns, and `Double` as values. The function first retrieves the `simClusters` data source from `ExternalDataSources` and then maps over each key-value pair to extract the `clusterIdToScores` map. It then filters out any `favScore` that is `None` and maps over the remaining scores to create a tuple of `(userId, clusterId, favScore)`. Finally, it returns a `SparseMatrix` object created from the list of tuples.
+
+The `getUserInterestedInTruncatedKMatrix` function is similar to `getUserInterestedInSparseMatrix`, but it returns a truncated version of the matrix with only the top `k` clusters for each user. It takes in a `topK` parameter and returns a `SparseMatrix` object with the same dimensions as `getUserInterestedInSparseMatrix`. The function first retrieves the `simClustersInterestedInUpdatedSource` data source from `InterestedInSources` and maps over each key-value pair to extract the `clusterIdToScores` map. It then filters out any `favScore` that is `None` and maps over the remaining scores to create a tuple of `(clusterId, favScore)`. It then sorts the list of tuples by `favScore` in descending order and takes the top `k` tuples. Finally, it maps over the top `k` tuples to create a tuple of `(userId, clusterId, score)` and returns a `SparseMatrix` object created from the list of tuples.
+
+The `getFlockBlocksSparseMatrix` function returns a sparse matrix of user block interactions from the `FlockBlocks` dataset. It takes in a `maxNumBlocks` parameter and a `rangeForData` parameter and returns a `SparseMatrix` object with `UserId` as rows, `UserId` as columns, and `Double` as values. The function first retrieves the `FlockBlocksJavaDataset` data source using `DAL` and maps over each `Flock.Edge` object to extract the `sourceId` and `destinationId`. It then filters out any edges that are not in a valid state or have not been updated within the specified date range. Finally, it creates a tuple of `(sourceId, destinationId, 1.0)` for each valid edge and returns a `SparseMatrix` object created from the list of tuples. The function also filters out any rows where the sum of values is greater than `maxNumBlocks` to remove users who might be responsible for automatically blocking users on the Twitter platform.
+
+Overall, these helper functions provide a way to retrieve and process data sources used in The Algorithm from Twitter project. They can be used to create sparse matrices of user data that can be used in various algorithms and models. For example, the `getUserInterestedInSparseMatrix` and `getUserInterestedInTruncatedKMatrix` functions can be used to create user interest profiles that can be used in recommendation systems. The `getFlockBlocksSparseMatrix` function can be used to create a user-user interaction graph that can be used in community detection algorithms.
+## Questions: 
+ 1. What is the purpose of this code file?
+- This code file contains helper functions to return sparse matrices of user's interestedIn clusters and fav scores, user block interactions from the FlockBlocks dataset, and truncated K matrix of user's interestedIn clusters and fav scores.
+
+2. What external dependencies does this code have?
+- This code has dependencies on several external libraries such as Scalding, Flock, and graphstore.
+
+3. What is the significance of the ValidEdgeStateId constant and how is it used?
+- The ValidEdgeStateId constant is used to filter out edges that are not valid in the FlockBlocks dataset. It is used in the getFlockBlocksSparseMatrix function to consider only edges that are valid and have been updated in the past year.

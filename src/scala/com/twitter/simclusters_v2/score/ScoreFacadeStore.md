@@ -1,0 +1,14 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/src/scala/com/twitter/simclusters_v2/score/ScoreFacadeStore.scala)
+
+The `ScoreFacadeStore` class provides a uniform access layer for all kinds of scores. It is initialized with a map of readable stores indexed by the `ScoringAlgorithm` they implement. The class implements the `ReadableStore` trait, which requires the implementation of the `get` and `multiGet` methods. The `get` method returns a `Future` of an optional `ThriftScore` for a given `ThriftScoreId`. The `multiGet` method returns a map of `Future`s of optional `ThriftScore`s for a set of `ThriftScoreId`s. The `multiGet` method is overridden to improve batch performance. If all the `ThriftScoreId`s in the set belong to the same `ScoringAlgorithm`, the `multiGet` method is called on the corresponding store. Otherwise, the `multiGet` method is called on each store for each `ScoringAlgorithm` in the set.
+
+The `ScoreFacadeStore` class is used in the larger project to provide a uniform access layer for all kinds of scores. It is used by other classes that need to access scores, such as the `AggregatedScoreStore` class. The `ScoreFacadeStore` class is also used to expose stats for all requests and per scoring algorithm. The `buildWithMetrics` method is used to build a `ScoreFacadeStore` with stats. It takes a map of readable stores indexed by the `ScoringAlgorithm` they implement, a map of aggregated stores indexed by the `ScoringAlgorithm` they implement, and a `StatsReceiver`. It returns a `ScoreFacadeStore` with stats. The `wrapStore` method is used to wrap a store with stats. It takes a `ScoringAlgorithm` and a `ReadableStore` and returns an `ObservedReadableStore` with stats. The `stores` map is used to map each `ScoringAlgorithm` to a wrapped store with stats. The `store` variable is used to create a new `ScoreFacadeStore` with the wrapped stores. The `aggregatedStores` are passed an instance of the `ScoreFacadeStore` after it has been constructed.
+## Questions: 
+ 1. What is the purpose of the `ScoreFacadeStore` class?
+- The `ScoreFacadeStore` class provides a uniform access layer for all kinds of scores, with readable stores indexed by the `ScoringAlgorithm` they implement.
+
+2. What is the purpose of the `multiGet` method and how does it improve batch performance?
+- The `multiGet` method overrides the default implementation for better batch performance. It groups the keys by `algorithm` and queries each group separately to avoid querying with more than one kind of embedding.
+
+3. What is the purpose of the `buildWithMetrics` method and what does it do?
+- The `buildWithMetrics` method builds a `ScoreFacadeStore` which exposes stats for all requests and per scoring algorithm. It wraps each store with an `ObservedReadableStore` to collect stats and passes the resulting stores to the `ScoreFacadeStore` constructor. It also sets up aggregated stores to access the `ScoreFacadeStore` instance.

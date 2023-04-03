@@ -1,0 +1,12 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/twml/twml/contrib/export/export_fn.py)
+
+This file contains functions for exporting models for different modes in the project called The Algorithm from Twitter. The `get_sparse_batch_supervised_input_receiver_fn` function returns an input receiver function that decodes a BatchPredictionRequest as sparse tensors with labels and weights as defined in feature_config. This input_receiver_fn is required for exporting models with 'train' mode to be trained with Java API. The `update_build_graph_fn_for_train` function updates a build_graph_fn by inserting in graph output a serialized BatchPredictionResponse similar to the export_output_fns for serving. The `export_model_for_train_and_infer` function exports a model with both 'train' and 'infer' mode. This means the exported saved_model.pb will contain two meta graphs, one with tag 'train' and the other with tag 'serve', and it can be loaded in Java API with either tag depending on the use case. The `export_all_models_with_receivers` function exports a model with train, eval, and infer modes. The `export_all_models` function exports a model with train, eval, and infer modes. The `export_feature_spec` function exports a FeatureConfig.get_feature_spec() dict to <dir_path>/feature_spec.yaml. Overall, these functions provide the necessary tools for exporting models in different modes in The Algorithm from Twitter project.
+## Questions: 
+ 1. What is the purpose of the `update_build_graph_fn_for_train` function?
+- The `update_build_graph_fn_for_train` function updates a `build_graph_fn` by inserting a serialized `BatchPredictionResponse` to the graph output with key 'prediction' when in 'train' mode, which is required for exporting models to be trained with Java API.
+
+2. What is the difference between `export_all_models` and `export_model_for_train_and_infer` functions?
+- The `export_all_models` function exports a model with train, eval, and infer modes, while the `export_model_for_train_and_infer` function exports a model with both 'train' and 'infer' modes.
+
+3. What is the purpose of the `export_feature_spec` function?
+- The `export_feature_spec` function exports a `FeatureConfig.get_feature_spec()` dictionary to a YAML file named `feature_spec.yaml` in the specified directory path.

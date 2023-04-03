@@ -1,0 +1,16 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/twml/twml/layers/percentile_discretizer.py)
+
+The `PercentileDiscretizer` layer is a part of the larger project called The Algorithm from Twitter. This layer is used to convert sparse continuous features into sparse binary features. Each binary output feature is associated with a bin, and each input feature is converted to `n_bin` bins. The layer is constructed by `PercentileDiscretizerCalibrator` after accumulating data and performing percentile bucket calibration. The calibration tries to find bin delimiters such that the number of feature values per bin is roughly equal for each given input feature. In other words, bins are calibrated to be approximately equiprobable, according to the given calibration data. If an input feature is rarely used, so will its associated output bin/features.
+
+The layer takes a 2D `SparseTensor` as input and outputs a `SparseTensor` of the same type. The output `SparseTensor` has a dense shape of `[batch_size, 1 << output_bits]`. If there are no calibrated features, then the discretizer will only apply `twml.util.limit_bits` to the feature keys (aka "feature_ids"). Essentially, the discretizer will be a "no-operation", other than obeying `out_bits`. The layer has several optional and required arguments, including `n_feature`, `n_bin`, `out_bits`, `bin_values`, `hash_keys`, `hash_values`, `bin_ids`, `feature_offsets`, `num_parts`, and `cost_per_unit`.
+
+The layer has several methods, including `__init__`, `build`, `call`, and `compute_output_shape`. The `__init__` method creates a non-initialized `PercentileDiscretizer` object. The `build` method creates the variables of the layer. The `call` method implements the PercentileDiscretizer inference where inputs are intersected with a hash_map. Input features that were not calibrated have their feature IDs truncated, so as to be less than `1<<output_bits`, but their values remain untouched (not discretized). The `compute_output_shape` method computes the output shape of the layer given the input shape.
+## Questions: 
+ 1. What is the purpose of the PercentileDiscretizer layer and how does it work?
+- The PercentileDiscretizer layer takes sparse continuous features and converts them to sparse binary features, with each binary output feature associated with a PercentileDiscretizer bin. The layer uses calibration to find bin delimiters such that the number of feature values per bin is roughly equal, making the bins equiprobable according to the given calibration data.
+
+2. What are the required and optional arguments for initializing a PercentileDiscretizer object?
+- The required arguments are n_feature, n_bin, and out_bits, which respectively represent the number of unique features accumulated during calibration, the number of bins used for calibration, and the maximum value for output feature IDs. Optional arguments include hash_keys, hash_values, bin_ids, bin_values, and feature_offsets, which are used to translate feature IDs and values into bin IDs and values.
+
+3. What happens if there are no calibrated features in the PercentileDiscretizer layer?
+- If there are no calibrated features, the layer will only apply twml.util.limit_bits to the feature keys, essentially making the layer a "no-operation" other than obeying the out_bits argument.

@@ -1,0 +1,16 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/cr-mixer/server/src/main/scala/com/twitter/cr_mixer/util/InterleaveUtil.scala)
+
+The `InterleaveUtil` object provides two methods for interleaving sequences of `Candidate` objects. The first method, `interleave`, takes a sequence of sequences of `Candidate` objects and interleaves them by iteratively taking one candidate from the first sequence and adding it to the result. Once a candidate is taken from a sequence, that sequence is moved to the end of the queue to process, and the candidate is removed from that sequence. The method keeps a mutable set of `TweetId` objects to ensure there are no duplicates in the result. The `candidates` parameter is assumed to be sorted by event time, with the latest event coming first. The method returns an immutable sequence of `Candidate` objects.
+
+The second method, `weightedInterleave`, takes a sequence of tuples, where each tuple contains a sequence of `Candidate` objects and a weight. The method interleaves the sequences by iteratively checking the weight to see if enough accumulation has occurred to sample from the sequence. If enough accumulation has occurred, the method takes one candidate from the sequence and adds it to the result. The sequence is then moved to the end of the queue to process, and the candidate is removed from the sequence if it was sampled. The method keeps count of the iterations to prevent infinite loops and a mutable set of `TweetId` objects to ensure there are no duplicates in the result. The `candidatesAndWeight` parameter is assumed to be sorted by event time, with the latest event coming first. The `maxWeightAdjustments` parameter specifies the maximum number of iterations to account for weighting before defaulting to uniform interleaving. The method returns an immutable sequence of `Candidate` objects.
+
+The `buildCandidatesKeyByCGInfo` method takes a sequence of `RankedCandidate` objects and groups them by a `GroupingKey` object, which is created from a `CandidateGenerationInfo` object. The method returns a sequence of sequences of `RankedCandidate` objects, where each sequence is sorted by prediction score in descending order.
+
+The `GroupingKey` case class represents a grouping key for `RankedCandidate` objects. It contains an optional `SourceInfo` object, a `SimilarityEngineType` object, and an optional model ID string. The `toGroupingKey` method creates a `GroupingKey` object from a `CandidateGenerationInfo` object.
+## Questions: 
+ 1. What is the purpose of the `InterleaveUtil` object and its methods?
+- The `InterleaveUtil` object provides methods for interleaving sequences of candidates, either uniformly or with a weighted sampling scheme.
+2. What is the role of the `seen` set in the `interleave` method?
+- The `seen` set is used to ensure that there are no duplicate candidates in the interleaved result.
+3. What is the purpose of the `GroupingKey` case class and its companion object?
+- The `GroupingKey` case class and its companion object provide a way to group candidates by their source information, similar engine type, and model ID. This is used in the `buildCandidatesKeyByCGInfo` method to group candidates before interleaving.

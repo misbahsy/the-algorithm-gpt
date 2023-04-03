@@ -1,0 +1,16 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/follow-recommendations-service/server/src/main/scala/com/twitter/follow_recommendations/configapi/DeciderConfigs.scala)
+
+The `DeciderConfigs` class is responsible for creating and managing the configuration for the deciders used in the Follow Recommendation Service. The `DeciderConfigs` class is a singleton class that is injected with a `DeciderGateBuilder` instance. 
+
+The `DeciderConfigs` class has two properties: `overrides` and `config`. The `overrides` property is a sequence of `OptionalOverride` instances that are created by mapping the `ParamsToDeciderMap` map. The `ParamsToDeciderMap` map maps the decider parameters to their corresponding decider keys. The `overrides` property is used to override the default values of the deciders. The `config` property is a `BaseConfig` instance that is created using the `BaseConfigBuilder` class. The `BaseConfig` instance is used to configure the deciders.
+
+The `UserOrGuestOrRequest` object is a `RecipientBuilder` that is used to build a `Recipient` instance based on the `BaseRequestContext`. The `UserOrGuestOrRequest` object has an `apply` method that takes a `BaseRequestContext` instance and returns an `Option[Recipient]`. The `apply` method checks if the `BaseRequestContext` instance is an instance of `WithUserId` or `WithGuestId`. If the `BaseRequestContext` instance is an instance of `WithUserId`, the `apply` method returns a `SimpleRecipient` instance with the user ID. If the `BaseRequestContext` instance is an instance of `WithGuestId`, the `apply` method returns a `GuestRecipient` instance with the guest ID. If the `BaseRequestContext` instance is not an instance of `WithUserId` or `WithGuestId`, the `apply` method throws an `UndefinedUserIdNorGuestIDException`.
+
+Overall, the `DeciderConfigs` class is an important part of the Follow Recommendation Service as it manages the configuration for the deciders used in the service. The `UserOrGuestOrRequest` object is used to build a `Recipient` instance based on the `BaseRequestContext`. This code is an example of how the Follow Recommendation Service uses deciders to make recommendations to users.
+## Questions: 
+ 1. What is the purpose of this code and what does it do?
+   - This code is defining a class and an object for DeciderConfigs that maps certain parameters to decider keys and builds a configuration for a FollowRecommendationServiceDeciders.
+2. What other dependencies does this code have?
+   - This code has dependencies on several other packages and classes, including com.twitter.decider, com.twitter.servo.decider, com.twitter.timelines.configapi, and javax.inject.
+3. What is the significance of the @Singleton and @Inject annotations?
+   - The @Singleton annotation indicates that only one instance of the DeciderConfigs class will be created, while the @Inject annotation is used to specify that the DeciderGateBuilder dependency should be injected into the constructor of the DeciderConfigs class.

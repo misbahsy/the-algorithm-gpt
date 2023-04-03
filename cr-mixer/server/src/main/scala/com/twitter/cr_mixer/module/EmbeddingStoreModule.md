@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/cr-mixer/server/src/main/scala/com/twitter/cr_mixer/module/EmbeddingStoreModule.scala)
+
+The `EmbeddingStoreModule` is a Scala object that provides Guice bindings for creating `ReadableStore` instances that can be used to read embeddings for various entities such as tweets and users. The `ReadableStore` is a read-only key-value store that provides a simple interface for reading values associated with keys. The `EmbeddingStoreModule` provides bindings for creating `ReadableStore` instances for different types of embeddings, such as tweet embeddings, user embeddings, and consumer-based tweet embeddings. 
+
+The `EmbeddingStoreModule` uses the `ManhattanRO` class to create `ReadableStore` instances. The `ManhattanRO` class is a wrapper around the Manhattan key-value store that provides a simple interface for reading values associated with keys. The `ManhattanRO` class is used to create `ReadableStore` instances that can be used to read embeddings for different entities. The `ManhattanRO` class uses the `ManhattanKVClientMtlsParams` class to configure the Manhattan key-value store client with MTLS parameters. 
+
+The `EmbeddingStoreModule` uses the `Injection` class from the `bijection` library to convert between `api.Embedding` objects and `Array[Byte]` objects. The `Injection` class provides a simple interface for converting between different types of objects. The `EmbeddingStoreModule` uses the `CompactScalaCodec` and `BinaryScalaCodec` classes from the `bijection` library to convert between `api.Embedding` objects and `Array[Byte]` objects. 
+
+The `EmbeddingStoreModule` provides Guice bindings for creating `ReadableStore` instances for different types of embeddings. For example, the `twHINEmbeddingRegularUpdateMhStore` method provides a Guice binding for creating a `ReadableStore` instance that can be used to read tweet embeddings. The `consumerBasedTwHINEmbeddingRegularUpdateMhStore` method provides a Guice binding for creating a `ReadableStore` instance that can be used to read consumer-based tweet embeddings. The `twoTowerFavConsumerEmbeddingMhStore` method provides a Guice binding for creating a `ReadableStore` instance that can be used to read user embeddings. 
+
+Overall, the `EmbeddingStoreModule` provides a simple interface for creating `ReadableStore` instances that can be used to read embeddings for different entities. The `EmbeddingStoreModule` is used in the larger project to provide a simple interface for reading embeddings that are used in various machine learning models. For example, the embeddings can be used to train machine learning models that are used for recommendation systems or content classification.
+## Questions: 
+ 1. What is the purpose of this code and what problem does it solve?
+- This code provides Guice bindings for creating ReadableStore instances for different types of embeddings used in the Twitter ML API.
+2. What is the role of the `ManhattanRO` class in this code?
+- The `ManhattanRO` class is used to create a ReadableStore instance for a given configuration and service identifier.
+3. What is the difference between the `buildUserEmbeddingStore` and `buildTweetEmbeddingStore` methods?
+- The `buildUserEmbeddingStore` method creates a ReadableStore instance for user embeddings, while the `buildTweetEmbeddingStore` method creates a ReadableStore instance for tweet embeddings.

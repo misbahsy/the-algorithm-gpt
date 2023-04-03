@@ -1,0 +1,20 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/simclusters-ann/server/src/main/scala/com/twitter/simclustersann/controllers/SimClustersANNController.scala)
+
+The `SimClustersANNController` class is a Finatra Thrift controller that handles requests for tweet candidates from a similarity clustering algorithm. The purpose of this code is to provide a service that returns a list of tweet candidates that are similar to a given tweet. 
+
+The `SimClustersANNController` class extends the `Controller` class from the Finatra Thrift library and handles requests for `GetTweetCandidates`. The `GetTweetCandidates` request takes a `Query` object as an argument, which contains a `sourceEmbeddingId` and a `config`. The `sourceEmbeddingId` is the ID of the tweet for which similar tweet candidates are being requested, and the `config` is a configuration object for the similarity clustering algorithm.
+
+The `SimClustersANNController` class has a `handler` method that takes a `Request` object and returns a `Future` of a `Response` object. The `handler` method extracts the `sourceEmbeddingId` and `config` from the `Query` object and passes them to the `sannCandidateSource` object, which is an instance of the `SANNSimClustersANNCandidateSource` class. The `sannCandidateSource` object returns a `Future` of an `Option` of a sequence of `SimClustersANNTweetCandidate` objects. If the `Option` is `Some`, the `handler` method creates a `Response` object containing a sequence of `SimClustersANNTweetCandidate` objects, where each `SimClustersANNTweetCandidate` object contains a `tweetId` and a `score`. If the `Option` is `None`, the `handler` method returns a default `Response` object.
+
+The `SimClustersANNController` class has a `filteredService` object that is a composition of three filters and a `handler` method. The three filters are the `variantFilter`, the `getTweetCandidatesResponseStatsFilter`, and the `Service.mk` method. The `variantFilter` is an instance of the `SimClustersAnnVariantFilter` class, which filters requests based on the `config` object. The `getTweetCandidatesResponseStatsFilter` is an instance of the `GetTweetCandidatesResponseStatsFilter` class, which collects statistics on the response times of the `handler` method. The `Service.mk` method creates a Finagle service from the `handler` method.
+
+The `SimClustersANNController` class has a `DefaultResponse` object, which is a default `Response` object that is returned when the `sannCandidateSource` object returns `None`.
+
+Overall, the `SimClustersANNController` class provides a service that returns a list of tweet candidates that are similar to a given tweet. The service is implemented as a Finatra Thrift controller and uses the Finagle library for networking. The service is composed of three filters and a `handler` method, which extracts the `sourceEmbeddingId` and `config` from the `Query` object and passes them to the `sannCandidateSource` object. The `sannCandidateSource` object returns a list of tweet candidates, which are returned as a `Response` object.
+## Questions: 
+ 1. What is the purpose of this code and what does it do?
+   - This code is a controller for a Twitter service called SimClustersANNService that handles requests for tweet candidates based on a query. It uses a candidate source to retrieve tweet candidates and applies filters to the response before returning it.
+2. What dependencies does this code have?
+   - This code depends on several libraries and packages including `com.twitter.conversions`, `com.twitter.finatra.thrift`, `com.twitter.scrooge`, `javax.inject`, and `com.twitter.util`.
+3. What is the purpose of the `SimClustersAnnVariantFilter` and `GetTweetCandidatesResponseStatsFilter` and how do they work?
+   - The `SimClustersAnnVariantFilter` is a filter that applies a variant to the query before it is sent to the candidate source. The `GetTweetCandidatesResponseStatsFilter` is a filter that records statistics about the response. Both filters are applied to the `filteredService` which is used to handle requests for tweet candidates.

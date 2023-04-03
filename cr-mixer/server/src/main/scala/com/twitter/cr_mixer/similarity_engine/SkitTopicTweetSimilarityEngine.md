@@ -1,0 +1,20 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/cr-mixer/server/src/main/scala/com/twitter/cr_mixer/similarity_engine/SkitTopicTweetSimilarityEngine.scala)
+
+The SkitTopicTweetSimilarityEngine is a class that implements a ReadableStore interface to retrieve a list of topic tweets with scores based on a given query. The purpose of this code is to provide a similarity engine that can be used to recommend tweets to users based on their interests. The SkitTopicTweetSimilarityEngine uses a Strato store to retrieve a list of topic tweets and their scores, and then sorts them by cosine similarity score. The top tweets are then returned to the user.
+
+The SkitTopicTweetSimilarityEngine class takes in a Strato store and a StatsReceiver object as parameters. The Strato store is used to retrieve the topic tweets, while the StatsReceiver object is used to track statistics related to the engine's performance. The class implements the ReadableStore interface, which requires it to implement a get method that takes in an EngineQuery object and returns a Future object containing a list of TopicTweetWithScore objects.
+
+The fetch method is used to retrieve the topic tweets from the Strato store based on the given query. The method calculates the earliest and latest tweet times based on the MaxTweetAgeInHours constant and the maxTweetAge parameter in the query. It then creates a list of TopicTweetPartitionFlatKey objects based on the calculated tweet times and other parameters in the query. The getTweetsForKeys method is then called to retrieve the topic tweets for the keys in the list. The method returns a Future object containing a list of SkitTopicTweet objects.
+
+The getTweetsForKeys method retrieves the topic tweets from the Strato store based on the keys in the list. It uses the multiGet method of the Strato store to retrieve the tweets and then combines and flattens the results. The method returns a Future object containing a list of SkitTopicTweet objects.
+
+The SkitTopicTweetSimilarityEngine object contains a Query case class that is used as a cache key for the engine. It also contains a SkitTopicTweet case class that represents a topic tweet with its source topic, tweet ID, favorite count, and cosine similarity score. The fromParams method is used to create an EngineQuery object based on the given parameters. The method takes in a topic ID, a boolean flag indicating whether the tweets are video-only, and a Params object containing the query parameters. The method calculates the maximum number of candidates based on the MaxSkitTfgCandidatesParam parameter and the isVideoOnly flag. It then creates a Query object based on the topic ID, maximum number of candidates, maximum tweet age, and semantic core version ID parameters. The method returns an EngineQuery object containing the Query object and the Params object.
+## Questions: 
+ 1. What is the purpose of this code and what problem does it solve?
+- This code is a similarity engine for topic tweets, which uses a Skit algorithm to find similar tweets based on cosine similarity scores. It solves the problem of recommending relevant tweets to users based on their interests.
+
+2. What dependencies does this code have and how are they used?
+- This code has dependencies on various libraries and modules, such as Google Guice for dependency injection, Twitter Finagle for stats reporting, and Twitter Storehaus for data storage. These dependencies are used to fetch and process data, as well as to report statistics on the engine's performance.
+
+3. How does this code handle caching and what is the cache key?
+- This code uses a cache key called "Query" to store and retrieve data from cache. The cache key is based on the topic ID, maximum number of candidates, maximum tweet age, and semantic core version ID. The cache is used to improve performance by reducing the number of requests to the underlying data store.

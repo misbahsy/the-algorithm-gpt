@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/twml/twml/contrib/pruning.py)
+
+This code implements tools for pruning neural networks, specifically dealing with binary masks. The `apply_mask` function applies a binary mask to the channels of a given tensor. During training, pruning is simulated by setting entries of the mask to zero. The function `update_pruning_signals` computes corresponding pruning signals indicating the importance of a feature for each mask. The pruning operation will zero out the mask entry with the smallest corresponding pruning signal. The `prune` function prunes a single feature by zeroing the mask entry with the smallest pruning signal. 
+
+The `computational_cost` function estimates the computational cost of a graph (number of FLOPs). To compute the cost of each feature per data point, we can use `tf.gradients(cost / batch_size, masks)`. The current implementation of `computational_cost` is designed to work with standard feed-forward and convolutional network architectures only, but may fail with more complicated architectures.
+
+The code also includes several helper functions. `extend_mask` repeats the mask for each data point stored in a tensor. `find_input_mask` finds the ancestral mask affecting the number of pruned channels of a tensor. `find_output_mask` finds the mask applied to the tensor or one of its descendants if it affects the tensor's pruned shape. `find_mask` returns masks indicating channels of the tensor that are effectively removed from the graph. `pruned_shape` computes the shape of a tensor after taking into account pruning of channels.
+
+Overall, this code provides a set of tools for pruning neural networks, which can be used to reduce the computational cost of a graph. The functions can be used in conjunction with standard feed-forward and convolutional network architectures.
+## Questions: 
+ 1. What is the purpose of the `apply_mask` function and how does it work?
+- The `apply_mask` function point-wise multiplies a tensor with a binary mask, which is used to simulate pruning during training by setting entries of the mask to zero. It allocates masks and corresponding pruning signals, extends masks to get a separate gradient for each data point, and stores extended mask, pruning signal, and other vars for easy access later. It returns a `tf.Tensor` with the same shape as the input tensor.
+
+2. How does the `computational_cost` function estimate the computational complexity of a pruned graph?
+- The `computational_cost` function estimates the computational complexity of a pruned graph (number of floating point operations) by recursively computing the cost of computing inputs, adding the cost of the operation, and excluding the cost of undefined ops and pruning ops. It currently only supports sequential graphs such as those of MLPs and simple CNNs with 2D convolutions in NHWC format.
+
+3. What is the purpose of the `update_pruning_signals` function and how does it work?
+- The `update_pruning_signals` function computes corresponding pruning signals indicating the importance of a feature for each mask, given any cross-entropy loss. It computes gradients of extended masks (yields separate gradient for each data point), estimates Fisher pruning signals from batch, and updates pruning signals using exponential moving average of pruning signals. It returns a `list[tf.Tensor]` of pruning signals corresponding to masks.

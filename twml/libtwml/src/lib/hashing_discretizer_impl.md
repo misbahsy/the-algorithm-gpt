@@ -1,0 +1,16 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/twml/libtwml/src/lib/hashing_discretizer_impl.cpp)
+
+The code defines a set of functions for hashing and searching data in a machine learning context. The functions are used to discretize feature values, which is a common preprocessing step in many machine learning algorithms. The main function, `hashDiscretizerInfer`, takes as input a set of feature IDs and their corresponding values, and discretizes the values into a set of bins. The output of the function is a set of keys and values, where the keys are the discretized feature IDs and the values are the number of occurrences of each feature ID in the input data.
+
+The `hashDiscretizerInfer` function uses a set of helper functions to perform the discretization. The `lower_bound_search` and `upper_bound_search` functions are used to find the index of the bin that each feature value belongs to. The `integer_multiplicative_hashing` and `integer64_multiplicative_hashing` functions are used to hash the feature IDs and bin indices into a set of keys that can be used to count the number of occurrences of each feature ID.
+
+The `hashDiscretizerInfer` function takes as input a set of options that control the behavior of the function. These options include the type of search method to use (`lower_bound_search`, `linear_search`, or `upper_bound_search`) and the type of hashing function to use (`integer_multiplicative_hashing` or `integer64_multiplicative_hashing`). The function also takes as input a set of calibration data that is used to determine the bin boundaries for each feature.
+
+Overall, the code provides a set of useful functions for discretizing feature values in a machine learning context. The `hashDiscretizerInfer` function is a key component of many machine learning algorithms, and the helper functions provided by this code make it easy to implement this functionality in a variety of contexts.
+## Questions: 
+ 1. What is the purpose of the `hashDiscretizerInfer` function and what are its required arguments?
+- The `hashDiscretizerInfer` function is used to hash discretized feature IDs into buckets and compute output keys and values. Its required arguments include input and output tensors, bin values, output bits, a map of feature IDs to indices, and options.
+2. What is the purpose of the `integer_multiplicative_hashing` and `integer64_multiplicative_hashing` functions?
+- The `integer_multiplicative_hashing` and `integer64_multiplicative_hashing` functions are used to hash feature IDs into one of 2^output_bits buckets. They achieve a uniform distribution of IDs and enable bucket indices to be added resulting in unique new IDs with high probability.
+3. What is the purpose of the `search_method` function pointer and how is it used in the `hashDiscretizerInfer` function?
+- The `search_method` function pointer is used to select a search function for finding the index of a value in a sorted array. It is used in the `hashDiscretizerInfer` function to select either `lower_bound_search`, `linear_search`, or `upper_bound_search` depending on the value of the `options` argument.

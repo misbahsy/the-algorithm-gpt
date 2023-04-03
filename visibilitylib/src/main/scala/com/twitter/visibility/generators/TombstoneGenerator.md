@@ -1,0 +1,22 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/visibilitylib/src/main/scala/com/twitter/visibility/generators/TombstoneGenerator.scala)
+
+The `TombstoneGenerator` class is responsible for generating tombstones for tweets that are not visible to certain users due to various reasons such as legal demands, community guidelines, or age restrictions. The class takes in a `VisibilityParams` object, a `CountryNameGenerator` object, and a `StatsReceiver` object as parameters. The `VisibilityParams` object contains information about the tweet's visibility, while the `CountryNameGenerator` object is used to generate country names for the tweet. The `StatsReceiver` object is used to collect statistics about the tombstones generated.
+
+The `TombstoneGenerator` class has a single public method called `apply` that takes in a `VisibilityResult` object and a `language` string as parameters. The `VisibilityResult` object contains information about the tweet's visibility, while the `language` string is used to determine the language of the tombstone message. The `apply` method returns a new `VisibilityResult` object with the tombstone information added.
+
+The `apply` method first checks if the `VisibilityResult` object's verdict is a `Tombstone`. If it is, the method generates a tombstone message based on the `Tombstone` object's `epitaph` and `applicableCountryCodes` properties. The `epitaph` property contains information about the reason for the tombstone, while the `applicableCountryCodes` property contains a list of country codes where the tweet is not visible. If the `applicableCountryCodes` property is not empty, the method generates a localized tombstone message that includes the country names. Otherwise, the method generates a non-localized tombstone message.
+
+The `apply` method also updates the `StatsReceiver` object with information about the tombstone generated. It increments a counter for the `epitaph` name and updates the `deletedReceiver`, `authorStateReceiver`, and `visResultReceiver` objects with information about the tombstone.
+
+The `TombstoneGenerator` class also has a private method called `epitaphToTombstoneReason` that maps an `Epitaph` object to a `TombstoneReason` object. The `Epitaph` object contains information about the reason for the tombstone, while the `TombstoneReason` object is used to categorize the tombstone.
+
+Overall, the `TombstoneGenerator` class is an important component of the larger project that generates tombstones for tweets that are not visible to certain users. It takes in various parameters and generates tombstone messages based on the tweet's visibility and reason for the tombstone. The class also collects statistics about the tombstones generated.
+## Questions: 
+ 1. What is the purpose of this code and what problem does it solve?
+- This code defines a TombstoneGenerator class and an apply method that takes a VisibilityResult and a language as input and returns a new VisibilityResult. The purpose of this code is to generate tombstones for tweets that violate Twitter's content policies.
+
+2. What are the dependencies of this code?
+- This code depends on several other classes and packages, including com.twitter.finagle.stats.StatsReceiver, com.twitter.servo.util.MemoizingStatsReceiver, com.twitter.visibility.builder.VisibilityResult, com.twitter.visibility.common.actions.TombstoneReason, com.twitter.visibility.configapi.VisibilityParams, com.twitter.visibility.rules.Epitaph, com.twitter.visibility.rules.LocalizedTombstone, and com.twitter.visibility.rules.Tombstone.
+
+3. What is the role of the TombstoneGenerator class and its methods?
+- The TombstoneGenerator class defines a constructor that takes a VisibilityParams, a CountryNameGenerator, and a StatsReceiver as input. It also defines an apply method that takes a VisibilityResult and a language as input and returns a new VisibilityResult. The apply method generates tombstones for tweets that violate Twitter's content policies by mapping the input VisibilityResult to a new VisibilityResult with a LocalizedTombstone verdict. The tombstone message is generated based on the input language and the applicable country codes. The epitaph of the tombstone is used to determine the tombstone reason.

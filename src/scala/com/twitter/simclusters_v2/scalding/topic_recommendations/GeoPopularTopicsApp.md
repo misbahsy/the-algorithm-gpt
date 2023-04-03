@@ -1,0 +1,20 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/src/scala/com/twitter/simclusters_v2/scalding/topic_recommendations/GeoPopularTopicsApp.scala)
+
+This code file contains three objects: `GeoPopularTopicsAdhocApp`, `GeoPopularTopicsBatchApp`, and `GeoPopularTopicsApp`. These objects are related to the topic recommendation system of Twitter. 
+
+`GeoPopularTopicsAdhocApp` is an object that extends `AdhocExecutionApp`. It has a method `runOnDateRange` that takes arguments and returns an `Execution` object. This method reads data from a `DAL` (Data Abstraction Layer) source, which is a `PerTopicAggregateEngagementScalaDataset`. It then calls the `getPopularTopicsFromLogs` method of the `GeoPopularTopicsApp` object to get the popular topics from the engagement logs. It writes the output to a TSV file or a `VersionedKeyValSource` depending on the value of the `typedTsv` argument. 
+
+`GeoPopularTopicsBatchApp` is an object that extends `ScheduledExecutionApp`. It has a method `runOnDateRange` that takes arguments and returns an `Execution` object. This method reads data from a `DAL` source, which is a `PerTopicAggregateEngagementScalaDataset`. It then calls the `getPopularTopicsFromLogs` method of the `GeoPopularTopicsApp` object to get the popular topics from the engagement logs. It writes the output to a `GeopopularTopTweetImpressedTopicsScalaDataset` using the `writeDALVersionedKeyValExecution` method. 
+
+`GeoPopularTopicsApp` is an object that has a method `getPopularTopicsFromLogs`. This method takes a `TypedPipe` of `PerTopicAggregateEngagementMetric` and a maximum number of topics as input. It returns a `TypedPipe` of tuples containing the country and a sequence of tuples containing the topic ID and its score. This method reads the engagement logs and filters out the tweets that are not impressions. It then groups the topics by country and sorts them in descending order of their engagement count. It takes the top `maxTopics` topics for each country and returns them as output. 
+
+These objects are used to get the popular topics from the engagement logs. `GeoPopularTopicsAdhocApp` is used for ad-hoc execution, while `GeoPopularTopicsBatchApp` is used for scheduled execution. `GeoPopularTopicsApp` is used by both these objects to get the popular topics. The output of these objects is used as input to other parts of the recommendation system.
+## Questions: 
+ 1. What is the purpose of this code and what does it do?
+- This code is part of a project called The Algorithm from Twitter and is used for topic recommendations. It imports various libraries and defines two objects, `GeoPopularTopicsAdhocApp` and `GeoPopularTopicsBatchApp`, which contain functions for getting popular topics from engagement logs and writing them to a key-value store.
+
+2. What external dependencies does this code have?
+- This code imports several libraries, including `com.twitter.bijection`, `com.twitter.recos.entities.thriftscala`, `com.twitter.scalding`, `com.twitter.scalding_internal.dalv2`, `com.twitter.scalding_internal.dalv2.remote_access`, `com.twitter.scalding_internal.multiformat.format.keyval`, `com.twitter.simclusters_v2.common`, `com.twitter.simclusters_v2.hdfs_sources`, `com.twitter.timelines.per_topic_metrics.thriftscala`, `com.twitter.wtf.scalding.jobs.common`, and `java.util.TimeZone`.
+
+3. What is the difference between `GeoPopularTopicsAdhocApp` and `GeoPopularTopicsBatchApp`?
+- `GeoPopularTopicsAdhocApp` is an object that defines a function for running topic recommendations on a specific date range and writing the results to a TSV or key-value store. It is meant to be run ad-hoc. `GeoPopularTopicsBatchApp`, on the other hand, is an object that defines a function for running topic recommendations on a scheduled basis and writing the results to a key-value store.

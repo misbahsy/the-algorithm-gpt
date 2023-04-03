@@ -1,0 +1,16 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/follow-recommendations-service/server/src/main/scala/com/twitter/follow_recommendations/logging/FrsLogger.scala)
+
+The `FrsLogger` class is responsible for logging data into two different logs: `logs.follow_recommendations_logs` and `logs.frs_recommendation_flow_logs`. The class is injected with a `LoggerFactory`, a `StatsReceiver`, and a flag `serviceShouldLogResults`. The `LoggerFactory` is used to create two different loggers, one for each log. The `StatsReceiver` is used to keep track of the number of logs written. The `serviceShouldLogResults` flag is used to determine whether or not to log the results.
+
+The `FrsLogger` class has three methods: `logRecommendationResult`, `logScoringResult`, and `logRecommendationFlowData`. The `logRecommendationResult` method logs data for the `getRecommendations` endpoint. The `logScoringResult` method logs data for the `scoreUserCandidates` endpoint. Both methods check if the user is a soft user and if not, they create a `RecommendationLog` object and log it using the appropriate logger. The `logRecommendationFlowData` method logs recommendation flow data for `getRecommendations` requests. It checks if the user is a soft user and if the `GlobalParams.EnableRecommendationFlowLogs` parameter is set to true. If both conditions are met, it creates a `RecommendationFlowLog` object and logs it using the appropriate logger.
+
+The `FrsLogger` class also has a `shouldLog` method that determines whether or not to log the results based on the `DebugParams` object passed in. If the `DebugParams` object is not provided, it defaults to the `serviceShouldLogResults` flag.
+
+The `FrsLogger` class is used in the larger project to log data for the `getRecommendations` and `scoreUserCandidates` endpoints. It is also used to log recommendation flow data for `getRecommendations` requests. The logs are used for debugging and monitoring purposes. The `FrsLogger` class provides a way to easily log data in a consistent format and to keep track of the number of logs written.
+## Questions: 
+ 1. What is the purpose of this code and what does it do?
+- This code is a logging class used to log data into two different logs for two different endpoints: getRecommendations and scoreUserCandidates. It logs data in the form of RecommendationLog and FrsRecommendationFlowLog.
+2. What dependencies does this code have?
+- This code has dependencies on various packages and classes such as StatsReceiver, GuiceNamedConstants, RecommendationRequest, RecommendationResponse, ScoringUserRequest, ScoringUserResponse, and many others.
+3. What is the significance of the `shouldLog` method?
+- The `shouldLog` method is used to determine whether or not to log data based on the debug parameters provided in the user request. If debug parameters are provided and the `doNotLog` option is not set, then the method returns true and logging is allowed. If no debug parameters are provided, then the `serviceShouldLogResults` flag is used to determine whether or not to log data.

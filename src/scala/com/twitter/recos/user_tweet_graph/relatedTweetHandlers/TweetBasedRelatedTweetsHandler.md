@@ -1,0 +1,20 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/src/scala/com/twitter/recos/user_tweet_graph/relatedTweetHandlers/TweetBasedRelatedTweetsHandler.scala)
+
+The `TweetBasedRelatedTweetsHandler` class is an implementation of the Thrift-defined service interface for tweet-based related tweets. It takes in a `TweetBasedRelatedTweetRequest` and returns a `RelatedTweetResponse`. The purpose of this class is to find tweets that are related to a given tweet based on various criteria such as co-occurrence, degree, and score.
+
+The `apply` method is the entry point for the service. It takes in a `TweetBasedRelatedTweetRequest` and returns a `Future` of `RelatedTweetResponse`. The method first gets all the internal tweet IDs for the given tweet using the `GetAllInternalTweetIdsUtil` utility class. If there is only one internal tweet ID, it calls the `getRelatedTweets` method to get the related tweets. Otherwise, it returns an empty `RelatedTweetResponse`.
+
+The `getRelatedTweets` method takes in a `TweetBasedRelatedTweetRequest` and a masked tweet ID. It first extracts various parameters from the request such as the maximum number of samples per neighbor, maximum results, minimum score, maximum tweet age, minimum result degree, minimum query degree, and minimum co-occurrence. It then gets the degree of the query tweet using the `getRightNodeDegree` method of the `BipartiteGraph` class and stores it in the `queryTweetDegree` variable. If the query tweet degree is less than the minimum query degree, it returns an empty `RelatedTweetResponse`.
+
+Otherwise, it samples left-hand side (LHS) user IDs using the `SampleLHSUsersUtil` utility class and fetches the right-hand side (RHS) tweet IDs using the `FetchRHSTweetsUtil` utility class. It then calculates a score pre-factor based on the query tweet degree, the logarithm of the query tweet degree, and the number of distinct sampled LHS user IDs. It uses this score pre-factor along with other parameters to get related tweet candidates using the `GetRelatedTweetCandidatesUtil` utility class. It then filters these candidates based on various criteria such as tweet age, score, and excluded tweet IDs. Finally, it returns a `RelatedTweetResponse` containing the related tweets and the query tweet graph features.
+
+Overall, this class provides a way to find related tweets based on various criteria. It can be used in the larger project to provide recommendations to users based on their tweet history and other factors. For example, it can be used to recommend tweets to users that they may be interested in based on the tweets they have liked or retweeted in the past.
+## Questions: 
+ 1. What is the purpose of this code and what does it do?
+- This code is an implementation of the Thrift-defined service interface for tweetBasedRelatedTweets. It takes a request for related tweets based on a given tweet ID and returns a response containing related tweets.
+
+2. What external libraries or dependencies does this code use?
+- This code uses several external libraries and dependencies, including com.twitter.finagle.stats, com.twitter.graphjet.bipartite.api, com.twitter.recos.features.tweet.thriftscala, com.twitter.recos.user_tweet_graph.thriftscala, com.twitter.recos.user_tweet_graph.util, com.twitter.recos.util, com.twitter.servo.request, and scala.concurrent.duration.HOURS.
+
+3. What are some of the configurable parameters that can be set for this code?
+- Some of the configurable parameters that can be set for this code include the maximum number of samples per neighbor, the maximum number of results to return, the minimum score for a related tweet to be included, the maximum age of a tweet to be considered, the minimum degree of a result tweet, the minimum degree of the query tweet, the minimum co-occurrence of a related tweet, and a set of tweet IDs to exclude from the results.

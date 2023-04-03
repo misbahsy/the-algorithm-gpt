@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/src/scala/com/twitter/simclusters_v2/scalding/InterestedInFromProducerEmbeddingsAdhocApp.scala)
+
+The code in this file is responsible for computing users' interestedIn vector from the producerEmbeddings dataset. It reads the UserUserNormalizedGraphScalaDataset to get user-user follow + fav graph, and then based on the producerEmbedding clusters of each followed/faved user, it calculates how much a user is interested in a cluster. To compute the engagement and determine the clusters for the user, it reuses the functions defined in InterestedInKnownFor. Using producerEmbeddings instead of knownFor to obtain interestedIn increases the coverage (especially for medium and light users) and also the density of the cluster embeddings for the user.
+
+The file contains two objects, InterestedInFromProducerEmbeddingsAdhocApp and InterestedInFromProducerEmbeddingsBatchApp. The former is an adhoc job to generate the interestedIn from producer embeddings for the model version 20M145KUpdated. It takes input arguments such as output directory, social proof threshold, max clusters per user final result, max clusters from producer, and typed TSV. It reads the UserUserNormalizedGraphScalaDataset and producerEmbeddings dataset, prunes the producer embeddings, and runs the InterestedInFromKnownFor function to compute the interestedIn vector. Finally, it writes the result to the output directory.
+
+The latter is a production job for computing interestedIn data set from the producer embeddings for the model version 20M145KUpdated. It writes the data set in KeyVal format to produce a MH DAL data set. It takes input arguments such as social proof threshold, max clusters from producer, and max clusters per user final result. It reads the UserUserNormalizedGraphScalaDataset and producerEmbeddings dataset, prunes the producer embeddings, and runs the InterestedInFromKnownFor function to compute the interestedIn vector. Finally, it writes the result to the output directory.
+
+Both objects use the InterestedInFromKnownFor function to compute the interestedIn vector. The InterestedInFromKnownFor function takes input arguments such as input graph, producer embeddings, social proof threshold, max clusters per user final result, and model version. It computes the interestedIn vector using the producer embeddings and returns the result. The result is a TypedPipe of tuples containing user IDs and their interestedIn clusters. The interestedIn clusters are represented as a ClustersUserIsInterestedIn object, which contains a map of cluster IDs to their scores.
+## Questions: 
+ 1. What is the purpose of this code and what problem does it solve?
+- This code implements a job for computing users' interestedIn vector from the producerEmbeddings data set. It reads the UserUserNormalizedGraphScalaDataset to get user-user follow + fav graph, and then based on the producerEmbedding clusters of each followed/faved user, it calculates how much a user is interestedIn a cluster. The purpose of this code is to increase the coverage and density of the cluster embeddings for the user.
+
+2. What are the input and output formats of this code?
+- The input format of this code is a UserUserNormalizedGraphScalaDataset and producerEmbeddings data set. The output format of this code is a KeyValDALDataset of ClustersUserIsInterestedIn.
+
+3. What are the parameters that can be configured in this code?
+- The parameters that can be configured in this code include socialProofThreshold, maxClustersPerUserFinalResult, maxClustersFromProducer, typedTsvTag, outputDir, and graphInputDir. These parameters control the behavior of the job and allow the user to customize the output.

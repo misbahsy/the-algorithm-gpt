@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/product-mixer/core/src/main/scala/com/twitter/product_mixer/core/functional_component/configapi/ParamsBuilder.scala)
+
+The `ParamsBuilder` class is a singleton object that is used to build `Params` objects for overriding configuration values. This class is part of the `The Algorithm from Twitter` project and is located in the `com.twitter.product_mixer.core.functional_component.configapi` package.
+
+The `ParamsBuilder` class has four parameters: `config`, `requestContextBuilder`, `statsReceiver`, and `scopedStatsReceiver`. The `config` parameter is an instance of the `Config` class, which is used to retrieve configuration values. The `requestContextBuilder` parameter is an instance of the `RequestContextBuilder` class, which is used to build a `RequestContext` object. The `statsReceiver` parameter is an instance of the `StatsReceiver` class, which is used to collect statistics about the configuration process. The `scopedStatsReceiver` parameter is an instance of the `MemoizingStatsReceiver` class, which is used to memoize the statistics collected by the `statsReceiver`.
+
+The `ParamsBuilder` class has one public method, `build`, which takes four parameters: `clientContext`, `product`, `featureOverrides`, and `fsCustomMapInput`. The `clientContext` parameter is an instance of the `ClientContext` class, which contains information about the client making the request. The `product` parameter is an instance of the `Product` class, which contains information about the product being requested. The `featureOverrides` parameter is a map of feature names to feature values, which are used to override the default configuration values. The `fsCustomMapInput` parameter is a map of custom configuration values.
+
+The `build` method calls the `build` method of the `requestContextBuilder` object to build a `RequestContext` object. It then calls the `apply` method of the `config` object with the `RequestContext` object and the `scopedStatsReceiver` object to retrieve the configuration values. Finally, it returns a `Params` object containing the configuration values.
+
+This class is used in the larger project to provide a way to override configuration values for specific clients and products. For example, if a client requests a specific product with a specific feature, the `ParamsBuilder` class can be used to override the default configuration values for that feature. This allows for greater flexibility in configuring the system to meet the needs of specific clients and products.
+## Questions: 
+ 1. What is the purpose of this code and what problem does it solve?
+   - This code is a singleton object for building Params to override. It likely solves the problem of needing to override certain parameters in a configuration file for a specific client or product.
+2. What dependencies does this code have?
+   - This code depends on several other packages and classes, including `com.twitter.finagle.stats.StatsReceiver`, `com.twitter.product_mixer.core.model.marshalling.request.ClientContext`, `com.twitter.product_mixer.core.model.marshalling.request.Product`, `com.twitter.servo.util.MemoizingStatsReceiver`, `com.twitter.timelines.configapi.Config`, `com.twitter.timelines.configapi.FeatureValue`, `com.twitter.timelines.configapi.Params`, `javax.inject.Inject`, and `javax.inject.Singleton`.
+3. What is the purpose of the `scopedStatsReceiver` value and how is it used?
+   - The `scopedStatsReceiver` value is a MemoizingStatsReceiver that is scoped to the "configapi" namespace within the `statsReceiver` object. It is used to track statistics related to the configuration API.

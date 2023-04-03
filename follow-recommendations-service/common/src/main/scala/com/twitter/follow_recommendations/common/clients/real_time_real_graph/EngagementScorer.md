@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/follow-recommendations-service/common/src/main/scala/com/twitter/follow_recommendations/common/clients/real_time_real_graph/EngagementScorer.scala)
+
+The `EngagementScorer` object contains methods for scoring user engagements based on a decayed timestamp and engagement type. The `apply` method takes in a map of user IDs to sequences of engagements, a map of engagement types to scores, and a minimum score threshold. It returns a sequence of tuples containing the user ID, total engagement score, and a sequence of engagement types. The method first calculates the total score for each user by summing the scores of each engagement, which is calculated using the `score` method. It then gets the engagement proof, which is a sequence of engagement types that have a non-zero score and are not clicks, using the `getEngagementProof` method. Finally, it filters out any users whose total score is below the minimum score threshold and sorts the remaining users by their total score in descending order.
+
+The `score` method takes in an engagement, the current time, and a map of engagement types to scores. It calculates the time lapse between the engagement timestamp and the current time, and uses this to decay the engagement score based on a forgetting curve. The engagement score is retrieved from the engagement type score map and multiplied by a base score decayed by the time lapse divided by the memory decay half-life.
+
+The `getEngagementProof` method takes in a sequence of engagements and a map of engagement types to scores. It filters out any engagements that are clicks or have a score of zero, and returns a sequence of engagement types containing the first non-zero engagement type or a click if there are no non-zero engagement types.
+
+This code is likely used in a larger project that involves recommending users to follow based on their engagement history. The `EngagementScorer` object is responsible for scoring user engagements and providing a measure of engagement proof, which can be used to rank users and make recommendations. The `apply` method is likely called by a higher-level recommendation engine that uses the engagement scores and proof to generate a list of recommended users.
+## Questions: 
+ 1. What is the purpose of the `EngagementScorer` object and its `apply` method?
+- The `EngagementScorer` object provides a method for scoring user engagements based on a decayed timestamp and engagement type. The `apply` method takes in a map of user engagements, a map of engagement types and their scores, and an optional minimum score threshold, and returns a sequence of user IDs, their scores, and their engagement types.
+
+2. What is the significance of the `MemoryDecayHalfLife` and `ScoringFunctionBase` values?
+- `MemoryDecayHalfLife` is a constant value representing the half-life of the memory decay function used to calculate engagement scores. `ScoringFunctionBase` is a constant value used as the base of the exponential function in the engagement score calculation.
+
+3. What is the purpose of the `getEngagementProof` method?
+- The `getEngagementProof` method takes in a sequence of engagements and a map of engagement types and their scores, and returns a sequence of engagement types that serve as proof of user engagement. It filters out engagements of type `Click` and those with a score of 0.0, and returns the remaining engagement types as proof.

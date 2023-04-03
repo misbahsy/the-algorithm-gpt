@@ -1,0 +1,22 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/ann/src/main/scala/com/twitter/ann/common/Task.scala)
+
+The code defines a trait called `Task` that represents a task that will be scheduled to execute periodically on every interval. The trait extends the `Closable` trait and has a method called `task()` that represents the body of the task to run. The trait also has two methods called `jitteredStart()` and `startImmediately()` that start the task after a random jitter and immediately, respectively. The trait also has a method called `close()` that closes the task.
+
+The trait has several private variables that are used to keep track of the task's execution. These variables include `exnStatsHandler`, `statsReceiver`, `totalTasks`, `successfulTasks`, `taskLatency`, `activeTasks`, `rng`, `timer`, and `taskLoop`. The `exnStatsHandler` variable is an instance of `CategorizingExceptionStatsHandler` that is used to report failures. The `statsReceiver` variable is an instance of `StatsReceiver` that is used to receive statistics about the task's execution. The `totalTasks`, `successfulTasks`, and `taskLatency` variables are counters that keep track of the total number of tasks, the number of successful tasks, and the latency of the tasks, respectively. The `activeTasks` variable is an `AtomicInteger` that keeps track of the number of active tasks. The `rng` variable is an instance of `Rng` that is used to generate random numbers. The `timer` variable is an instance of `Timer` that is used to schedule tasks. The `taskLoop` variable is a `Future` that represents the task loop.
+
+The trait has a private method called `run()` that executes the task with bookkeeping. The method increments the `totalTasks` and `activeTasks` counters, sets up a new trace root for the task, logs the start of the task, executes the task, logs the completion of the task, increments the `successfulTasks` counter if the task is successful, and records any exceptions that occur during the task's execution. The method also calculates the elapsed time of the task, decrements the `activeTasks` counter, adds the elapsed time to the `taskLatency` counter, and schedules the next task to run after the task interval.
+
+The trait has two abstract methods called `taskInterval` and `task()` that represent the task interval and the body of the task to run, respectively. The `taskInterval` method returns a `Duration` that represents the task interval. The `task()` method returns a `Future` that represents the execution of the task.
+
+The trait also has three methods called `jitteredStart()`, `startImmediately()`, and `close()` that start the task after a random jitter, immediately, and close the task, respectively. The `jitteredStart()` method generates a random jitter and schedules the task to run after the jitter. The `startImmediately()` method schedules the task to run immediately. The `close()` method closes the task and raises an exception if the task is already closed.
+
+Overall, this code defines a trait that represents a task that will be scheduled to execute periodically on every interval. The trait provides methods to start and close the task and keeps track of statistics about the task's execution. This trait can be used in the larger project to define tasks that need to be executed periodically. For example, a task that updates a cache can be defined using this trait and scheduled to run periodically.
+## Questions: 
+ 1. What is the purpose of the `Task` trait and how is it used in the project?
+- The `Task` trait represents a task that will be scheduled to execute periodically on every interval. It is used to define the body of a task to run and the task interval, and provides methods to start and close the task.
+
+2. What external libraries or frameworks are being used in this code?
+- The code is using several external libraries and frameworks, including Finagle for stats and tracing, Twitter Util for timers and futures, and SLF4J for logging.
+
+3. How is the task execution time and failure rate being monitored and reported?
+- The task execution time and failure rate are being monitored and reported using a `StatsReceiver` object, which provides counters and stats for the total number of tasks, successful tasks, and task latency, as well as an exception stats handler for reporting task failures.

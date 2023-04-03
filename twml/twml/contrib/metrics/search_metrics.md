@@ -1,0 +1,16 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/twml/twml/contrib/metrics/search_metrics.py)
+
+The code in this file contains extra TensorFlow metrics used at Twitter. The purpose of this module is to provide metrics that conform to the conventions used by `tf.metrics.*`. Each metric in this module constructs two subgraphs: `value_op` and `update_op`. The `value_op` is used to fetch the current metric value, while the `update_op` is used to accumulate into the metric. 
+
+The `ndcg` function in this module computes the full normalized discounted cumulative gain (ndcg) based on predictions. The ndcg is a measure of ranking quality that evaluates the ranking of a set of items. The function takes in the ground truth value (`labels`) and the predicted values (`predictions`). The scores in `predictions` are transformed to order and relevance scores to calculate ndcg. A relevance score means how relevant a `DataRecord` is to a particular query. The function returns the ndcg score and an update operation used to accumulate data into this metric. 
+
+The `get_search_metric_fn` function returns a function that takes in `graph_output`, `labels`, and `weights` as inputs and returns a dictionary of common evaluation metric Ops for ranking. The `graph_output` is a dictionary that is returned by `build_graph` given input features. The `labels` are target labels associated with the batch, and `weights` are the weights of the samples. The function adds search metrics and binary metrics to the `eval_metric_ops` dictionary. The search metrics include ndcg, and the binary metrics include ctr, rce, nrce, pr_auc, roc_auc, accuracy, precision, and recall. 
+
+Overall, this module provides additional metrics that can be used to evaluate the performance of a model in a ranking problem. The `ndcg` function computes the ndcg score, which is a measure of ranking quality. The `get_search_metric_fn` function returns a dictionary of evaluation metric Ops for ranking, including ndcg and binary metrics. These metrics can be used to evaluate the performance of a model during the evaluation phase.
+## Questions: 
+ 1. What is the purpose of this module and how does it relate to tf.metrics.*?
+- The purpose of this module is to contain extra tensorflow metrics used at Twitter, and it conforms to conventions used by tf.metrics.*. Each metric constructs two subgraphs: value_op and update_op.
+2. What is the difference between ndcg and other supported binary metrics?
+- ndcg is a search metric that works for ranking-related problems, while other supported binary metrics (such as accuracy, precision, and recall) apply to binary classification problems only.
+3. What is the purpose of the get_search_metric_fn function and what arguments does it take?
+- The purpose of the get_search_metric_fn function is to return a function that evaluates and reports evaluation metrics during the eval phases only. It takes binary_metrics, search_metrics, ndcg_top_ks, and use_binary_metrics as arguments.

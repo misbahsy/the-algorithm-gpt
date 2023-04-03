@@ -1,0 +1,22 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/cr-mixer/server/src/main/scala/com/twitter/cr_mixer/similarity_engine/TweetBasedUserTweetGraphSimilarityEngine.scala)
+
+The `TweetBasedUserTweetGraphSimilarityEngine` is a Scala class that is part of the `The Algorithm from Twitter` project. The purpose of this class is to look for similar tweets from UserTweetGraph for a Source TweetId. The User Tweet Graph (UTG) is a graph that allows us to find out which other tweets share a lot of the same engagers with the query tweet. The class is a `ReadableStore` that takes a `Query` object and returns a `Future` of `Option[Seq[TweetWithScore]]`.
+
+The `Query` object contains several parameters that are used to fetch the similar tweets. These parameters include the `sourceId`, which is the ID of the tweet that we want to find similar tweets for, `maxResults`, which is the maximum number of similar tweets to return, `minCooccurrence`, which is the minimum number of times that the similar tweets must have been engaged with by the same users as the source tweet, `tweetBasedMinScore`, which is the minimum score that the similar tweets must have based on the tweet-based similarity algorithm, `consumersBasedMinScore`, which is the minimum score that the similar tweets must have based on the consumers-based similarity algorithm, `maxTweetAgeInHours`, which is the maximum age of the tweets to consider, `maxConsumerSeedsNum`, which is the maximum number of consumer seeds to use for the consumers-based similarity algorithm, `enableCoverageExpansionOldTweet`, which is a flag that indicates whether to use the coverage expansion algorithm for old tweets, and `enableCoverageExpansionAllTweet`, which is a flag that indicates whether to use the coverage expansion algorithm for all tweets.
+
+The `get` method of the class takes a `Query` object and returns a `Future` of `Option[Seq[TweetWithScore]]`. The method first checks the `sourceId` of the query and then calls either the `getCandidates` or `getCoverageExpansionCandidates` method to fetch the similar tweets. The `getCandidates` method fetches the similar tweets using the tweet-based similarity algorithm, while the `getCoverageExpansionCandidates` method fetches the similar tweets using the consumers-based similarity algorithm with coverage expansion. The method returns a `Future` of `Option[Seq[TweetWithScore]]`.
+
+The `toTweetWithScore` method is a private method that takes a `Future` of `Option[RelatedTweetResponse]` and returns a `Future` of `Option[Seq[TweetWithScore]]`. The method maps the `RelatedTweetResponse` to a sequence of `TweetWithScore` objects.
+
+The `isOldTweet` method is a private method that takes a `TweetId` and returns a boolean indicating whether the tweet is old or not. The method uses the `SnowflakeId` library to extract the timestamp from the tweet ID and compares it to the current time.
+
+Overall, the `TweetBasedUserTweetGraphSimilarityEngine` class is an important component of the `The Algorithm from Twitter` project that allows us to find similar tweets based on the User Tweet Graph. The class provides a flexible and configurable way to fetch similar tweets using different similarity algorithms and parameters.
+## Questions: 
+ 1. What is the purpose of this code and what problem does it solve?
+- This code is a store that looks for similar tweets from UserTweetGraph for a Source TweetId. It allows finding out which other tweets share a lot of the same engagers with the query tweet.
+
+2. What dependencies does this code have?
+- This code has dependencies on several other packages, including com.twitter.cr_mixer, com.twitter.recos, com.twitter.simclusters_v2, com.twitter.storehaus, com.twitter.twistly, com.twitter.util, and javax.inject.
+
+3. What is the role of the Query case class and how is it used in this code?
+- The Query case class is used to define the parameters for the query, including the source ID, maximum number of results, minimum co-occurrence, minimum score, maximum tweet age in hours, maximum number of consumer seeds, and flags for enabling coverage expansion for old and all tweets. It is used to create an EngineQuery object that is passed to the get method to retrieve the results.

@@ -1,0 +1,22 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/cr-mixer/server/src/main/scala/com/twitter/cr_mixer/util/CountWeightedInterleaveUtil.scala)
+
+The `CountWeightedInterleaveUtil` object provides utility functions for weighted interleaving of candidates in the context of Twitter's algorithm. Weighted interleaving is a technique used to blend multiple sets of ranked candidates into a single list, where the order of the candidates is determined by their weights. The weights are calculated based on the frequency of the candidates within each group, and a shrinkage parameter is used to enforce more diversity by moving the weights closer to uniformity. 
+
+The object contains three main functions: `toGroupingKey`, `buildRankedCandidatesWithWeightKeyByFeature`, and `buildInitialCandidatesWithWeightKeyByFeature`. 
+
+The `toGroupingKey` function takes a candidate, an interleave feature, and a group ID, and returns a grouping key for the candidate. The grouping key is a case class that contains optional fields for source information, similarity engine type, model ID, author ID, and group ID. The function uses pattern matching to determine the grouping key based on the type of the candidate and the interleave feature. 
+
+The `buildRankedCandidatesWithWeightKeyByFeature` function takes a sequence of ranked candidates, a ranker weight shrinkage value, and an interleave feature, and returns a sequence of tuples containing the ranked candidates and their weights. The function groups the candidates by their grouping keys, calculates the weights for each group using the `calculateWeightsKeyByFeature` function, and returns the candidates sorted by their prediction score and their weights. 
+
+The `buildInitialCandidatesWithWeightKeyByFeature` function takes a sequence of sequences of initial candidates, a ranker weight shrinkage value, and returns a sequence of tuples containing the initial candidates and their weights. The function groups the candidates by their grouping keys, calculates the weights for each group using the `calculateWeightsKeyByFeature` function, and returns the candidates and their weights. 
+
+Overall, the `CountWeightedInterleaveUtil` object provides a set of utility functions for weighted interleaving of candidates in the context of Twitter's algorithm. These functions are used to blend multiple sets of ranked candidates into a single list, where the order of the candidates is determined by their weights. The functions use grouping keys to group the candidates by their source information, similarity engine type, model ID, author ID, and group ID, and calculate the weights for each group based on the frequency of the candidates within the group and a shrinkage parameter.
+## Questions: 
+ 1. What is the purpose of the `CountWeightedInterleaveUtil` object and what does it do?
+- The `CountWeightedInterleaveUtil` object provides utility functions for weighted interleaving of candidates, which involves grouping candidates by certain features and calculating weights for each group to ensure diversity. It includes functions for converting candidates to grouping keys, calculating weights, and building groups with weights for both ranked and initial candidates.
+
+2. What is the significance of the `GroupingKey` case class and how is it used?
+- The `GroupingKey` case class represents the features used to group candidates for weighted interleaving. It includes optional fields for source information, similarity engine type, model ID, author ID, and blending group ID. It is used to create grouping keys for both ranked and initial candidates, which are then used to group candidates and calculate weights.
+
+3. What is the purpose of the `calculateWeightsKeyByFeature` function and how does it work?
+- The `calculateWeightsKeyByFeature` function calculates weights for each group of candidates based on their frequencies within the group and a shrinkage parameter that enforces diversity. It takes a map of grouping keys to candidate sequences and a ranker weight shrinkage value as input, and returns a map of grouping keys to weights. It works by first finding the maximum number of candidates in any group, then iterating over each group and calculating the observed weight as the size of the group divided by the maximum number of candidates. It then calculates the final weight as a combination of the observed weight and the ranker weight shrinkage value, where a shrinkage value of 1 results in complete uniformity. The final weights are returned as a map keyed by grouping keys.

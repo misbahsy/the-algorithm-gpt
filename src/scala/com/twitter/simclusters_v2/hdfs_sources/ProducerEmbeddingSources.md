@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/src/scala/com/twitter/simclusters_v2/hdfs_sources/ProducerEmbeddingSources.scala)
+
+The `ProducerEmbeddingSources` object in the `com.twitter.simclusters_v2.hdfs_sources` package provides two helper functions for retrieving producer SimClusters embeddings. These embeddings are representations of Twitter users and their associated clusters of similar users. The embeddings are stored in HDFS and are accessed using the Scalding framework.
+
+The first function, `producerEmbeddingSourceLegacy`, retrieves embeddings with the legacy `TopSimClustersWithScore` value type. The function takes two arguments: `embeddingType`, which specifies the type of embedding to retrieve, and `modelVersion`, which specifies the version of the model used to generate the embeddings. The function returns a `TypedPipe` of `(Long, TopSimClustersWithScore)` tuples, where the `Long` is the producer ID and `TopSimClustersWithScore` is a case class containing the top similar clusters for the producer and their associated scores. The function uses pattern matching to determine which dataset to retrieve based on the `embeddingType` and `modelVersion` arguments. It then reads the most recent snapshot of the dataset using the `DAL` (Data Access Layer) and applies a remote read policy to allow cross-cluster access. Finally, it maps the key-value pairs in the dataset to `(Long, TopSimClustersWithScore)` tuples.
+
+The second function, `producerEmbeddingSource`, retrieves embeddings with the `SimClustersEmbedding` value type. The function takes the same arguments as `producerEmbeddingSourceLegacy` and returns a `TypedPipe` of `(Long, SimClustersEmbedding)` tuples, where the `Long` is the producer ID and `SimClustersEmbedding` is a case class containing the producer's embedding. The function uses pattern matching to determine which dataset to retrieve based on the `embeddingType` and `modelVersion` arguments. It then reads the most recent snapshot of the dataset using the `DAL` and applies a remote read policy to explicitly specify the location of the dataset. Finally, it maps the key-value pairs in the dataset to `(Long, SimClustersEmbedding)` tuples.
+
+These functions are likely used in the larger project to retrieve producer embeddings for use in downstream processing, such as clustering or classification. The choice of which function to use depends on the value type of the embeddings required. The `producerEmbeddingSourceLegacy` function may be used if legacy code requires the `TopSimClustersWithScore` value type, while the `producerEmbeddingSource` function may be used for newer code that requires the `SimClustersEmbedding` value type.
+## Questions: 
+ 1. What is the purpose of this code and what does it do?
+- This code defines two functions that retrieve producer SimClusters embeddings with different value types, given an embedding type and model version.
+
+2. What external libraries or dependencies does this code rely on?
+- This code relies on several libraries from the Scalding and SimClusters_v2 projects, including DateRange, TypedPipe, DAL, and various ThriftScala classes.
+
+3. What are the different cases handled in the pattern matching statements within the functions?
+- The pattern matching statements handle different combinations of embedding types and model versions, and return the corresponding datasets for each case. If an unsupported combination is provided, a ClassNotFoundException is thrown.

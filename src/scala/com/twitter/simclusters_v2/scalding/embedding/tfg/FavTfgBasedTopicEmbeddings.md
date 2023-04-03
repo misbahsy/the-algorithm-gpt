@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/src/scala/com/twitter/simclusters_v2/scalding/embedding/tfg/FavTfgBasedTopicEmbeddings.scala)
+
+This code defines several Scalding jobs that generate Fav-based Topic-Follow-Graph (TFG) topic embeddings. These embeddings are used to represent topics on Twitter and are calculated as the sum of its followers' fav-based InterestedIn scores. The purpose of these jobs is to generate and update these embeddings for different time periods and versions of the model.
+
+The main class is `TfgBasedTopicEmbeddingsBaseApp`, which is extended by several other classes that define specific jobs. Each job has a different configuration for the input data source, output data source, and model version. The `FavTfgTopicEmbeddingsAdhocApp` and `FavTfgTopicEmbeddingsScheduledApp` classes generate embeddings for the current model version, while the `FavTfgTopicEmbeddings2020AdhocApp` and `FavTfgTopicEmbeddings2020ScheduledApp` classes generate embeddings for a previous model version. The `FavTfgTopicEmbeddings2020CopyScheduledApp` class is a temporary solution to keep the TFG dataset alive until topics are deprecated.
+
+Each job defines the `embeddingType`, `embeddingSource`, `pathSuffix`, `modelVersion`, and `scoreExtractor` parameters. The `embeddingType` parameter specifies the type of embedding being generated, which is `EmbeddingType.FavTfgTopic` in all cases. The `embeddingSource` parameter specifies the input data source, which is a DAL dataset containing key-value pairs of `SimClustersEmbeddingId` and `ThriftSimClustersEmbedding`. The `pathSuffix` parameter specifies the suffix to be added to the output data source path. The `modelVersion` parameter specifies the version of the model being used to generate the embeddings. The `scoreExtractor` parameter is a function that extracts the score used to calculate the embeddings from the input data.
+
+The `FavTfgTopicEmbeddingsAdhocApp` and `FavTfgTopicEmbeddings2020AdhocApp` classes extend the `AdhocExecutionApp` class, which allows them to be run ad-hoc. The `FavTfgTopicEmbeddingsScheduledApp` and `FavTfgTopicEmbeddings2020ScheduledApp` classes extend the `ScheduledExecutionApp` class, which allows them to be run on a schedule. The `FavTfgTopicEmbeddings2020CopyScheduledApp` class does not extend either of these classes and is used as a temporary solution to keep the TFG dataset alive.
+
+Overall, these jobs are used to generate and update embeddings for topics on Twitter using a Fav-based Topic-Follow-Graph approach. They are designed to be run ad-hoc or on a schedule for different time periods and versions of the model.
+## Questions: 
+ 1. What is the purpose of this code and what does it do?
+- This code generates Fav-based Topic-Follow-Graph (TFG) topic embeddings, which are the sum of a topic's followers' fav-based InterestedIn scores.
+2. What are the different apps defined in this code and what are their differences?
+- There are four different apps defined in this code: `FavTfgTopicEmbeddingsAdhocApp`, `FavTfgTopicEmbeddingsScheduledApp`, `FavTfgTopicEmbeddings2020AdhocApp`, and `FavTfgTopicEmbeddings2020ScheduledApp`. The first two generate embeddings for the current model version, while the latter two generate embeddings for a specific model version from 2020. The `Adhoc` apps are meant for one-time execution, while the `Scheduled` apps are meant for regular, scheduled execution.
+3. What is the purpose of the `FavTfgTopicEmbeddings2020CopyScheduledApp` and why is it necessary?
+- This app is a temporary solution to keep the TFG dataset alive until topics are deprecated. It copies the previous version of TFG and writes it to a new one, since the dependent dataset for TFG has been deleted.

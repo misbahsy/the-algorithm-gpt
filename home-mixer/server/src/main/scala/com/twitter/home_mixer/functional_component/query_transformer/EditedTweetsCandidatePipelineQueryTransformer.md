@@ -1,0 +1,20 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/home-mixer/server/src/main/scala/com/twitter/home_mixer/functional_component/query_transformer/EditedTweetsCandidatePipelineQueryTransformer.scala)
+
+The `EditedTweetsCandidatePipelineQueryTransformer` is a Scala object that extends the `CandidatePipelineQueryTransformer` trait. It is used to transform a `PipelineQuery` object into a sequence of tweet IDs that are eligible for editing. 
+
+The `transform` method takes a `PipelineQuery` object as input and returns a sequence of tweet IDs. The method first retrieves the applicable candidates by calling the `getApplicableCandidates` method. The applicable candidates are the entries in the Timelines Persistence Store that are relevant to the current query. The method then filters out the entries that are older than the edit time window, which is set to 30 minutes. It also excludes the tweet IDs for which `ReplaceEntry` instructions have already been sent. Finally, it returns the tweet IDs that are eligible for editing.
+
+The `getApplicableCandidates` method retrieves the applicable candidates from the Timelines Persistence Store. It first extracts the `ClientPlatform` from the `PipelineQuery` object. It then sorts the responses by descending order of served time and filters out the responses that do not match the `ClientPlatform`. It then takes the most recent response that contains an `Initial` request type and all the responses that came before it. It then extracts the tweet entries from the responses and returns them as a sequence of `PersistenceStoreEntry` objects.
+
+The `PersistenceStoreEntry` case class represents a tweet entry in the Timelines Persistence Store. It contains the `EntryWithItemIds` object, which contains the tweet ID, and the served time, client platform, and request type associated with the entry.
+
+This code is used in the larger project to enable editing of tweets within a certain time window after they are created. It is part of the query transformer component of the home mixer service, which is responsible for transforming pipeline queries into candidate IDs. The candidate IDs are then used to retrieve the corresponding tweets from the Timelines Persistence Store.
+## Questions: 
+ 1. What is the purpose of this code and how does it fit into the larger project?
+- This code is a candidate pipeline query transformer for a project called The Algorithm from Twitter. It transforms a pipeline query to return a sequence of tweet IDs that have not been replaced and are within the time window for editing a tweet.
+
+2. What external dependencies does this code rely on?
+- This code relies on several external dependencies, including `com.twitter.common_internal.analytics.twitter_client_user_agent_parser.UserAgent`, `com.twitter.conversions.DurationOps._`, `com.twitter.home_mixer.model.HomeFeatures.PersistenceEntriesFeature`, `com.twitter.product_mixer.core.feature.featuremap.FeatureMap`, `com.twitter.product_mixer.core.functional_component.transformer.CandidatePipelineQueryTransformer`, `com.twitter.product_mixer.core.model.common.identifier.TransformerIdentifier`, `com.twitter.product_mixer.core.pipeline.PipelineQuery`, `com.twitter.timelinemixer.clients.persistence.EntryWithItemIds`, `com.twitter.timelines.persistence.thriftscala.RequestType`, `com.twitter.timelines.util.client_info.ClientPlatform`, `com.twitter.timelineservice.model.rich.EntityIdType`, and `com.twitter.util.Time`.
+
+3. What is the purpose of the `getApplicableCandidates` method and how does it work?
+- The `getApplicableCandidates` method retrieves applicable candidates from the Timelines Persistence Store via a query feature. It first extracts the user agent and client platform from the pipeline query, then sorts the responses by served time and filters them by client platform. It then takes the most recent response that includes an initial request and extracts the tweet IDs from the entries that have an entity ID type of "Tweet". Finally, it returns a sequence of `PersistenceStoreEntry` objects that include the entry with item IDs, served time, client platform, and request type.

@@ -1,0 +1,16 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/timelines/data_processing/ad_hoc/earlybird_ranking/earlybird_ranking/model_evaluation/EarlybirdEvaluationMetric.scala)
+
+The code defines a set of evaluation metrics for comparing the performance of two models: a "full" model and a "light" (Earlybird) model. The metrics are calculated for a set of candidate records from a single request. The `CandidateRecord` case class represents a single candidate, with a tweet ID, a full score, an early score, and a boolean flag indicating whether the candidate was served.
+
+The `EarlybirdEvaluationMetric` trait is a sealed trait that defines the interface for all evaluation metrics. Each evaluation metric is a case class that extends this trait and implements the `apply` method, which takes a sequence of `CandidateRecord`s and returns an optional `Double` value representing the metric score. Each evaluation metric also has a `name` field that gives the name of the metric.
+
+The code defines several evaluation metrics, including `TopKRecall`, which picks the set of `k` top candidates using light scores and calculates recall of these light-score based candidates among the set of `k` top candidates using full scores. Another metric, `ProbabilityOfCorrectOrdering`, calculates the probability that a random pair of candidates will be ordered the same by the full and earlybird models. There are also metrics that calculate recall of selected light-score based candidates among the set of actual shown candidates (`ShownTweetRecall`), and metrics that calculate the average full score for the top light candidates (`AverageFullScoreForTopLight`).
+
+These evaluation metrics can be used to compare the performance of the full and light models on a set of candidate records. For example, one could calculate the `TopKRecall` metric for different values of `k` to see how the performance of the two models varies as the number of candidates considered increases. Similarly, one could calculate the `ProbabilityOfCorrectOrdering` metric to see how often the two models agree on the ordering of candidate records. These metrics can be used to tune the parameters of the models and to evaluate their performance on different datasets.
+## Questions: 
+ 1. What is the purpose of the `EarlybirdEvaluationMetric` trait and its implementations?
+- The `EarlybirdEvaluationMetric` trait and its implementations define metrics for evaluating the performance of a "full" prediction model compared to a "light" (Earlybird) model, based on a set of candidate records.
+2. What do the `TopKRecall` and `ProbabilityOfCorrectOrdering` metrics calculate?
+- `TopKRecall` calculates the recall of the top `k` candidates selected using light scores, among the top `k` candidates selected using full scores. `ProbabilityOfCorrectOrdering` calculates the probability that a random pair of candidates will be ordered the same by the full and earlybird models.
+3. What is the purpose of the `ShownTweetRecallWithFullScores` metric?
+- The `ShownTweetRecallWithFullScores` metric calculates the recall of the top `k` candidates selected using full scores, among the actual shown candidates. This is a sanity metric to ensure that the top full-scored candidates are being served.

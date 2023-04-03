@@ -1,0 +1,20 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/visibilitylib/src/main/scala/com/twitter/visibility/rules/CardRules.scala)
+
+The code defines three objects that represent different rules for determining the visibility of certain types of tweets on Twitter. These rules are part of a larger project called The Algorithm from Twitter, which likely includes many other rules and algorithms for determining what content is shown to users on the platform.
+
+The first object, `DropProtectedAuthorPollCardRule`, represents a rule that drops (i.e. hides) poll cards authored by protected accounts. A poll card is a type of tweet that includes a poll question and multiple answer options. A protected account is one that has restricted its tweets to only be visible to approved followers. The rule is defined using the `RuleWithConstantAction` class, which takes two arguments: the action to take if the rule is triggered (in this case, dropping the tweet with a reason of "ProtectedAuthor"), and the conditions under which the rule should be triggered. The conditions for this rule are that the tweet must be a poll card, the author must be a protected account, and the viewer must either be logged out or not following the author.
+
+The second object, `DropCardUriRootDomainDenylistRule`, represents a rule that drops tweets containing links to certain domains. The domains to be blocked are specified in the `CardUriRootDomainDenyListParam` parameter. The rule is defined similarly to the first one, with the action of dropping the tweet with an unspecified reason, and the condition that the tweet must contain a link to one of the blocked domains.
+
+The third object, `DropCommunityNonMemberPollCardRule`, represents a rule that drops poll cards posted by users who are not members of a particular community. A community is a group of Twitter users who share a common interest or identity. The rule is defined using several conditions: the tweet must be a poll card, it must be posted by a user who is part of the community, and the viewer must either not be a member of the community or the tweet must not be visible to the community. This rule has two additional methods, `enabled` and `enableFailClosed`, which specify whether the rule is currently enabled and whether it should fail closed (i.e. drop the tweet) if there is an error in the rule's configuration.
+
+Overall, these rules are designed to help ensure that certain types of content are not shown to users on Twitter if they violate certain criteria. They are likely part of a larger set of rules and algorithms that work together to determine what content is shown to users on the platform.
+## Questions: 
+ 1. What is the purpose of this code and what problem does it solve?
+- This code defines a set of rules for determining the visibility of certain types of tweets on Twitter, specifically poll cards. It aims to prevent protected authors, non-community members, and certain card URIs from being visible to viewers.
+
+2. What are the different conditions that are being checked in the rules?
+- The conditions being checked include whether the tweet is a poll card, whether the author is protected, whether the viewer is logged out or not following the author, whether the tweet is a community tweet, and whether the viewer is a community member. There are also conditions related to card URIs and community visibility.
+
+3. How are the rules enabled and what is the difference between `EnableCommunityNonMemberPollCardRule` and `EnableCommunityNonMemberPollCardRuleFailClosed`?
+- The rules are enabled through the `enabled` and `enableFailClosed` methods, which return a sequence of `RuleParam[Boolean]` objects. `EnableCommunityNonMemberPollCardRule` enables the rule for dropping non-member poll cards, while `EnableCommunityNonMemberPollCardRuleFailClosed` enables the rule in a fail-closed mode, meaning that if there is an error in the rule evaluation, the card will be dropped by default.

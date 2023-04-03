@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/follow-recommendations-service/common/src/main/scala/com/twitter/follow_recommendations/common/candidate_sources/stp/OfflineStrongTiePredictionBaseSource.scala)
+
+The code defines a base class called `OfflineStrongTiePredictionBaseSource` that is used as a candidate source for a recommendation system. The class extends the `CandidateSource` trait and takes a `Fetcher` object as a parameter. The `Fetcher` object is responsible for fetching the data required for generating recommendations. The `fetch` method takes a `target` parameter, which is the user ID for whom recommendations are being generated. The method returns a `Stitch` object that contains a sequence of `CandidateUser` objects. The `CandidateUser` class represents a user who is a candidate for recommendation. 
+
+The `OfflineStrongTiePredictionBaseSource` class has an `apply` method that takes a `HasParams with HasClientContext` object as a parameter and returns a `Stitch` object. The `HasParams` trait represents a request that has parameters, and the `HasClientContext` trait represents a request that has a client context. The `apply` method calls the `fetch` method with the user ID obtained from the `HasParams` object. If the user ID is not present in the `HasParams` object, the method returns a `Stitch.Nil` object.
+
+The `OfflineStrongTiePredictionBaseSource` class has a companion object that defines a `map` method. The `map` method takes a `target` parameter, which is the user ID for whom recommendations are being generated, and a `candidates` parameter, which is an `STPResult` object. The `STPResult` object contains the strong tie users for the given user ID. The `map` method returns a sequence of `CandidateUser` objects. The `CandidateUser` objects are created by mapping the `strongTieUsers` of the `STPResult` object to `CandidateUser` objects. The `score` and `reason` fields of the `CandidateUser` objects are set using the `score` and `socialProof` fields of the `strongTieUsers` objects, respectively.
+
+Overall, this code defines a base class that can be extended to create candidate sources for a recommendation system. The `OfflineStrongTiePredictionBaseSource` class fetches data using a `Fetcher` object and returns a sequence of `CandidateUser` objects. The `map` method of the companion object is used to map the data fetched by the `Fetcher` object to `CandidateUser` objects. This code is likely a part of a larger recommendation system that uses various candidate sources to generate recommendations for users.
+## Questions: 
+ 1. What is the purpose of this code and how does it fit into the larger project? 
+- This code is a base class for offline strong tie prediction dataset that extends CandidateSource. It fetches a list of CandidateUsers based on a target user and converts the result into an internal model. It is part of the candidate_sources package in the common module of the Follow Recommendations project.
+
+2. What external dependencies does this code rely on? 
+- This code relies on several external dependencies including com.twitter.hermit.stp.thriftscala, com.twitter.product_mixer.core, com.twitter.stitch, and com.twitter.strato.client.
+
+3. What is the significance of the OfflineStrongTiePredictionBaseSource.map method? 
+- The OfflineStrongTiePredictionBaseSource.map method takes a target user and a STPResult and returns a sequence of CandidateUsers. It sorts the strong tie users by score and creates a CandidateUser object for each user with an associated Reason object that includes an AccountProof object with a FollowProof object. This method is used in the fetch method to convert the STPResult into the necessary internal model.

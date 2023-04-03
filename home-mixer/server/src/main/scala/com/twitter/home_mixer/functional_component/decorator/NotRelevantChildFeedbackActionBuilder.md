@@ -1,0 +1,16 @@
+[View code on GitHub](https://github.com/misbahsy/the-algorithm/home-mixer/server/src/main/scala/com/twitter/home_mixer/functional_component/decorator/NotRelevantChildFeedbackActionBuilder.scala)
+
+The code defines a class called `NotRelevantChildFeedbackActionBuilder` that is used to build a child feedback action for a tweet candidate that is deemed not relevant. The class is annotated with `@Singleton`, indicating that only one instance of this class will be created and shared across the application. The class has one constructor that takes two parameters: a `StringCenter` instance and an instance of `HomeMixerExternalStrings`. The `StringCenter` is used to prepare strings for display, while `HomeMixerExternalStrings` contains externalized strings used in the feedback action.
+
+The class has one method called `apply` that takes a `TweetCandidate` and a `FeatureMap` as input parameters and returns an `Option[ChildFeedbackAction]`. The `TweetCandidate` represents a tweet that is being evaluated for relevance, while the `FeatureMap` contains features associated with the tweet candidate. The method first prepares two strings using the `StringCenter` instance: `notRelevantString` and `notRelevantConfirmationString`. It then creates a `FeedbackMetadata` instance that contains information about the tweet being evaluated, such as its ID. It also creates a feedback URL using the `FeedbackInfo` object, which contains information about the feedback type, metadata, and injection type. Finally, it creates a `ChildFeedbackAction` object that contains information about the feedback action, such as the feedback type, prompt, confirmation, and feedback URL.
+
+This class is likely used in a larger project that involves evaluating tweets for relevance and providing feedback to users. The `NotRelevantChildFeedbackActionBuilder` class is responsible for building a feedback action that allows users to indicate that a tweet is not relevant. This feedback can then be used to improve the relevance of future tweets shown to the user. The `FeatureMap` parameter allows for additional features to be associated with the tweet candidate, which can be used to further refine the relevance evaluation. Overall, this class is a small but important part of a larger system that aims to improve the relevance of tweets shown to users.
+## Questions: 
+ 1. What is the purpose of this code and what problem does it solve?
+- This code is a Scala implementation of a child feedback action builder for the Twitter home mixer product. It provides a way to generate feedback actions for tweets that are not relevant to the user.
+
+2. What external dependencies does this code rely on?
+- This code relies on several external dependencies, including the Twitter string center client, the Twitter timelineservice model, and the Twitter product mixer component library model.
+
+3. What is the expected input and output of the `apply` method?
+- The `apply` method takes in a `TweetCandidate` object and a `FeatureMap` object, and returns an optional `ChildFeedbackAction` object. The purpose of this method is to generate a feedback action for the given tweet candidate based on its features and metadata.
